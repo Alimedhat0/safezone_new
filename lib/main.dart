@@ -89,6 +89,12 @@ class MainApp extends StatelessWidget {
                     color: Colors.blue,
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    GirdServicesData().stopTracking();
+                  },
+                  icon: Icon(Icons.stop, color: Colors.blue),
+                ),
               ],
             ),
             body: Consumer<HomeProvider>(

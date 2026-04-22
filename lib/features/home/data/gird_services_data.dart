@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -118,16 +119,16 @@ class GirdServicesData extends ChangeNotifier {
       currentLatLng = LatLng(position.latitude, position.longitude);
       notifyListeners();
       path.add(currentLatLng!);
-      print('Your Location: $currentLatLng');
+      // print('Your Location: $currentLatLng');
     });
     notifyListeners();
   }
 
   void stopTracking() {
-    print('Stop');
     positionStream?.cancel();
     positionStream = null;
     liveLocation = null;
+    print('Stop');
     notifyListeners();
   }
 
@@ -150,16 +151,22 @@ class GirdServicesData extends ChangeNotifier {
     if (!_isInit) return null;
 
     final dir = await getTemporaryDirectory();
-    final path = '${dir.path}/sos.wav';
+    final path = '${dir.path}/sos.m4a';
 
-    await _recorder.startRecorder(toFile: path, codec: Codec.pcm16WAV);
+    await _recorder.startRecorder(
+      toFile: path,
+      codec: Codec.aacMP4,
+      // sampleRate: 44100,
+      // numChannels: 1,
+    );
 
     await Future.delayed(const Duration(seconds: 11));
 
     await _recorder.stopRecorder();
     print(
-      '------------------------------------------------------------------------------------------$path',
+      '--------------------------------------------------------------------------------$path',
     );
+    print(File(path).lengthSync());
     return path;
   }
 
@@ -175,7 +182,7 @@ class GirdServicesData extends ChangeNotifier {
     required double lon,
     required String uid,
   }) async {
-    final uri = Uri.parse("http://10.0.2.2:3000/api/sos");
+    final uri = Uri.parse("http://192.168.1.7:3000/api/sos");
 
     var request = http.MultipartRequest("POST", uri);
 
