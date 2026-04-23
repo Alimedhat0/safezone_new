@@ -68,24 +68,24 @@ class LoginScreen extends StatelessWidget {
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
-                        if (provider.isLoading == true)
-                          CircularProgressIndicator(),
-                        SizedBox(
-                          width: screenWidth,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: 6,
-                              backgroundColor: Colors.blue,
+                        provider.isLoading
+                            ? CircularProgressIndicator()
+                            : SizedBox(
+                              width: screenWidth,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 6,
+                                  backgroundColor: Colors.blue,
+                                ),
+                                onPressed: () {
+                                  provider.login(context);
+                                },
+                                child: Text(
+                                  'Log in',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                             ),
-                            onPressed: () {
-                              provider.login(context);
-                            },
-                            child: Text(
-                              'Log in',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
                         SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

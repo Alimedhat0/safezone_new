@@ -2,9 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/features/change_email/logic/change_email_provider.dart';
+import 'package:safe_zone/features/change_password/logic/change_password_provider.dart';
 import 'package:safe_zone/features/edit_profile/logic/edit_profile_provider.dart';
 import 'package:safe_zone/features/emergency_contacts/logic/emergency_provider.dart';
 import 'package:safe_zone/features/emergency_contacts/ui/emergency_contact_screen.dart';
+import 'package:safe_zone/features/forget_password/logic/forget_password_provider.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/personal_info/logic/personal_info_provider.dart';
@@ -36,6 +39,9 @@ void main() async {
               (_) => EditProfileProvider()..init(HomeProvider().registerModel),
         ),
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => ChangeEmailProvider()),
+        ChangeNotifierProvider(create: (_) => ChangePasswordProvider()),
+        ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()),
         ChangeNotifierProvider(create: (_) => PersonalInfoProvider()),
       ],
       child: MyApp(),

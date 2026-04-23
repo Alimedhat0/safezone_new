@@ -35,23 +35,18 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<UserCredential?> signInWithGoogle() async {
-    // يبدأ تسجيل الدخول
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // لو المستخدم لغى العملية
     if (googleUser == null) return null;
 
-    // الحصول على authentication
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-    // إنشاء credential
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    // تسجيل الدخول في Firebase
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:safe_zone/features/change_email/ui/change_email_screen.dart';
+import 'package:safe_zone/features/change_password/ui/change_password_screen.dart';
 import 'package:safe_zone/features/personal_info/ui/personal_info_screen.dart';
 import 'package:safe_zone/features/settings/models/cardscontent.dart';
 import 'package:safe_zone/features/trusted_contacts/ui/trusted_contact_screen.dart';
@@ -22,12 +24,12 @@ class SettingsProvider extends ChangeNotifier {
     Cardscontent(
       preicon: Icons.email_outlined,
       title: 'Change Email',
-      screen: TrustedContactScreen(),
+      screen: ChangeEmailScreen(),
     ),
     Cardscontent(
       preicon: Icons.lock_outline,
       title: 'Change Password',
-      screen: TrustedContactScreen(),
+      screen: ChangePasswordScreen(),
     ),
     Cardscontent(
       preicon: Icons.people_alt_outlined,
