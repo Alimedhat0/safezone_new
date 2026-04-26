@@ -14,12 +14,9 @@ class VoiceBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final provider = context.read<MessageProvider>();
-
     return Consumer<MessageProvider>(
       builder: (context, provider, _) {
         final isCurrent = provider.currentPlayingUrl == audioUrl;
-
         return Row(
           children: [
             IconButton(

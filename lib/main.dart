@@ -7,6 +7,7 @@ import 'package:safe_zone/features/change_password/logic/change_password_provide
 import 'package:safe_zone/features/edit_profile/logic/edit_profile_provider.dart';
 import 'package:safe_zone/features/emergency_contacts/logic/emergency_provider.dart';
 import 'package:safe_zone/features/emergency_contacts/ui/emergency_contact_screen.dart';
+import 'package:safe_zone/features/emergency_trigger/logic/emegency_trigger_provider.dart';
 import 'package:safe_zone/features/forget_password/logic/forget_password_provider.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
@@ -14,6 +15,7 @@ import 'package:safe_zone/features/personal_info/logic/personal_info_provider.da
 import 'package:safe_zone/features/services/logic/services_provider.dart';
 import 'package:safe_zone/features/settings/logic/settings_provider.dart';
 import 'package:safe_zone/features/splash/ui/splash_screen.dart';
+import 'package:safe_zone/features/voice_activation/logic/voice_activation_provider.dart';
 import 'package:safe_zone/firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -42,6 +44,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ChangeEmailProvider()),
         ChangeNotifierProvider(create: (_) => ChangePasswordProvider()),
         ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()),
+        ChangeNotifierProvider(create: (_) => EmegencyTriggerProvider()),
+        ChangeNotifierProvider(create: (_) => VoiceActivationProvider()),
         ChangeNotifierProvider(create: (_) => PersonalInfoProvider()),
       ],
       child: MyApp(),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:safe_zone/features/change_email/ui/change_email_screen.dart';
 import 'package:safe_zone/features/change_password/ui/change_password_screen.dart';
+import 'package:safe_zone/features/emergency_trigger/ui/emergency_trigger_screen.dart';
 import 'package:safe_zone/features/personal_info/ui/personal_info_screen.dart';
 import 'package:safe_zone/features/settings/models/cardscontent.dart';
 import 'package:safe_zone/features/trusted_contacts/ui/trusted_contact_screen.dart';
 
 class SettingsProvider extends ChangeNotifier {
-  bool liveOn = true;
+  // bool liveOn = true;
   bool timeron = false;
   bool notificationOn = true;
   bool alertSoundOn = true;
@@ -14,6 +15,22 @@ class SettingsProvider extends ChangeNotifier {
   bool locationAccOn = true;
   bool cameraAccOn = false;
   bool micAccOn = true;
+
+  Map<String, bool> settings = {
+    'liveOn': true,
+    'timeron': false,
+    'notificationOn': true,
+    'alertSoundOn': true,
+    'alertVibrationOn': true,
+    'locationAccOn': true,
+    'cameraAccOn': false,
+    'micAccOn': true,
+  };
+
+  void updateSetting(String key, bool value) {
+    settings[key] = value;
+    notifyListeners();
+  }
 
   List<Cardscontent> cardscontent = [
     Cardscontent(
@@ -39,7 +56,7 @@ class SettingsProvider extends ChangeNotifier {
     Cardscontent(
       preicon: Icons.flash_on,
       title: 'Emergency Triggers',
-      screen: TrustedContactScreen(),
+      screen: EmergencyTriggerScreen(),
     ),
     Cardscontent(
       preicon: Icons.language,

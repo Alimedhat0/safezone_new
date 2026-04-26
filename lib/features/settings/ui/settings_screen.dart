@@ -175,9 +175,9 @@ class SettingsScreen extends StatelessWidget {
                           activeTrackColor: Colors.blue,
 
                           secondary: Icon(Icons.location_on_outlined),
-                          value: provider.liveOn,
+                          value: provider.settings['liveOn'] ?? false,
                           onChanged: (va) {
-                            provider.liveOn = !provider.liveOn;
+                            provider.updateSetting('liveOn', va);
                           },
                           title: Text('Live Location Sharing'),
                         ),
@@ -252,7 +252,6 @@ class SettingsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     color: Color(0xffffffff),
-
                     elevation: 6,
                     child: Column(
                       children: [
@@ -267,7 +266,6 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         SwitchListTile(
                           activeTrackColor: Colors.blue,
-
                           secondary: Icon(Icons.camera_alt_outlined),
                           value: provider.cameraAccOn,
                           onChanged: (va) {
@@ -277,7 +275,6 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         SwitchListTile(
                           activeTrackColor: Colors.blue,
-
                           secondary: Icon(Icons.mic_none_outlined),
                           value: provider.micAccOn,
                           onChanged: (va) {
