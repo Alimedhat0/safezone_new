@@ -26,7 +26,12 @@ class VoiceActivationProvider extends ChangeNotifier {
   String? recordedPath;
 
   Future initRecorder() async {
-    await Permission.microphone.request();
+    // await Permission.microphone.request();
+    final status = await Permission.microphone.request();
+
+    if (!status.isGranted) {
+      throw Exception("Mic permission denied");
+    }
 
     await recorder.openRecorder();
 
@@ -52,11 +57,8 @@ class VoiceActivationProvider extends ChangeNotifier {
     final path = await recorder.stopRecorder();
     isRecording = false;
     if (path != null) {
-      // final url = await uploadAudio(path);
-
-      // sendToFirebase(url);
       try {
-        final url = await uploadAudio(path!);
+        final url = await uploadAudio(path);
         await sendToFirebase(url);
       } catch (e) {
         print("Upload error: $e");
@@ -99,7 +101,7 @@ class VoiceActivationProvider extends ChangeNotifier {
     final uid = user.uid;
     final messageId = DateTime.now().millisecondsSinceEpoch.toString();
 
-    final audioFire = SecretWordModel(uid: uid, path: url);
+    final audioFire = SecretWordModel(uid: uid, path: url, id: messageId);
 
     await FirebaseFirestore.instance
         .collection('secretword')
@@ -107,23 +109,6 @@ class VoiceActivationProvider extends ChangeNotifier {
         .set(audioFire.toMap());
   }
 
-  // Future<void> getSecretword(String uid) async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user == null) return;
-  //   FirebaseFirestore.instance
-  //       .collection('secretword')
-  //       .where('uid', isEqualTo: user.uid)
-  //       .snapshots()
-  //       .listen((event) {
-  //         audioList.clear();
-  //         final docs = event.docs;
-  //         for (var doc in docs) {
-  //           final secretword = SecretWordModel.fromMap(doc.data());
-  //           audioList.add(secretword);
-  //         }
-  //         notifyListeners();
-  //       });
-  // }
   StreamSubscription? _subscription;
 
   Future<void> getSecretword() async {
@@ -138,36 +123,52 @@ class VoiceActivationProvider extends ChangeNotifier {
         .snapshots()
         .listen((event) {
           // audioList.clear();
+          // audioList =
+          //     event.docs.map((e) => SecretWordModel.fromMap(e.data())).toList();
           audioList =
-              event.docs.map((e) => SecretWordModel.fromMap(e.data())).toList();
+              event.docs
+                  .map((e) => SecretWordModel.fromMap(e.data(), e.id))
+                  .toList();
 
-          for (var doc in event.docs) {
-            final secretword = SecretWordModel.fromMap(doc.data());
-            audioList.add(secretword);
-          }
+          // for (var doc in event.docs) {
+          //   final secretword = SecretWordModel.fromMap(doc.data(), doc.id);
+          //   audioList.add(secretword);
+          // }
 
           notifyListeners();
         });
   }
-  //   Future<void> deleteAudio(SecretWordModel audio) async {
-  //   try {
-  //     // 🗑️ 1. حذف من Supabase
-  //     final filePath = audio.path.split('/').last;
 
-  //     await supabase.storage
-  //         .from('secretword')
-  //         .remove(['records/$filePath']);
+  Future<void> deleteAudio(SecretWordModel audio) async {
+    try {
+      // 🗑️ 1. حذف من Supabase
+      final uri = Uri.parse(audio.path);
+      final filePath = uri.pathSegments.last;
 
-  //     // 🗑️ 2. حذف من Firestore
-  //     await FirebaseFirestore.instance
-  //         .collection('secretword')
-  //         .doc(audio.id)
-  //         .delete();
+      await supabase.storage.from('secretword').remove(['records/$filePath']);
 
-  //   } catch (e) {
-  //     print("Delete error: $e");
-  //   }
-  // }
+      // 🗑️ 2. حذف من Firestore
+      await FirebaseFirestore.instance
+          .collection('secretword')
+          .doc(audio.id)
+          .delete();
+    } catch (e) {
+      print("Delete error: $e");
+    }
+  }
+
+  bool isPlaying = false;
+
+  Future<void> toggleAudio(String url) async {
+    if (isPlaying) {
+      await player.stopPlayer();
+      isPlaying = false;
+    } else {
+      await player.startPlayer(fromURI: url);
+      isPlaying = true;
+    }
+    notifyListeners();
+  }
 
   @override
   void dispose() {
