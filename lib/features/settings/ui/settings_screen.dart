@@ -22,8 +22,9 @@ class SettingsScreen extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          spacing: 15,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
@@ -79,55 +80,11 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Text('Account'),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                color: Color(0xffffffff),
-
-                elevation: 6,
-                child: Column(
-                  children: [
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Row(
-                          spacing: 10,
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(provider.cardscontent[index].preicon),
-                            Expanded(
-                              child: Text(provider.cardscontent[index].title),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            provider.cardscontent[index].screen,
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.arrow_forward_ios),
-                            ),
-                          ],
-                        );
-                      },
-                      separatorBuilder:
-                          (context, index) => Divider(thickness: 1),
-                      itemCount: 3,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Text('Emegency & Safety'),
-            Consumer<SettingsProvider>(
-              builder: (context, provider, _) {
-                return Padding(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Account'),
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     color: Color(0xffffffff),
@@ -142,10 +99,10 @@ class SettingsScreen extends StatelessWidget {
                               spacing: 10,
                               children: [
                                 SizedBox(width: 10),
-                                Icon(provider.cardscontent[index + 3].preicon),
+                                Icon(provider.cardscontent[index].preicon),
                                 Expanded(
                                   child: Text(
-                                    provider.cardscontent[index + 3].title,
+                                    provider.cardscontent[index].title,
                                   ),
                                 ),
                                 IconButton(
@@ -156,7 +113,240 @@ class SettingsScreen extends StatelessWidget {
                                         builder:
                                             (context) =>
                                                 provider
-                                                    .cardscontent[index + 3]
+                                                    .cardscontent[index]
+                                                    .screen,
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(Icons.arrow_forward_ios),
+                                ),
+                              ],
+                            );
+                          },
+                          separatorBuilder:
+                              (context, index) => Divider(thickness: 1),
+                          itemCount: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Emegency & Safety'),
+                Consumer<SettingsProvider>(
+                  builder: (context, provider, _) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: Color(0xffffffff),
+                        elevation: 6,
+                        child: Column(
+                          children: [
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  spacing: 10,
+                                  children: [
+                                    SizedBox(width: 10),
+                                    Icon(
+                                      provider.cardscontent[index + 3].preicon,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        provider.cardscontent[index + 3].title,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    provider
+                                                        .cardscontent[index + 3]
+                                                        .screen,
+                                          ),
+                                        );
+                                      },
+                                      icon: Icon(Icons.arrow_forward_ios),
+                                    ),
+                                  ],
+                                );
+                              },
+                              separatorBuilder:
+                                  (context, index) => Divider(thickness: 1),
+                              itemCount: 2,
+                            ),
+
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+
+                              secondary: Icon(Icons.location_on_outlined),
+                              value: provider.settings['liveOn'] ?? false,
+                              onChanged: (va) {
+                                provider.updateSetting('liveOn', va);
+                              },
+                              title: Text('Live Location Sharing'),
+                            ),
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+
+                              secondary: Icon(Icons.watch_later_outlined),
+                              value: provider.timeron,
+                              onChanged: (va) {
+                                provider.timeron = !provider.timeron;
+                              },
+                              title: Text('Auto-SOS Timer'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Notifications'),
+                Consumer<SettingsProvider>(
+                  builder: (context, provider, _) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: Color(0xffffffff),
+
+                        elevation: 6,
+                        child: Column(
+                          children: [
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+                              secondary: Icon(Icons.notifications_none),
+                              value: provider.notificationOn,
+                              onChanged: (va) {
+                                provider.notificationOn =
+                                    !provider.notificationOn;
+                              },
+                              title: Text('Push Notification'),
+                            ),
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+                              secondary: Icon(Icons.volume_up_outlined),
+                              value: provider.alertSoundOn,
+                              onChanged: (va) {
+                                provider.alertSoundOn = !provider.alertSoundOn;
+                              },
+                              title: Text('Alert Sounds'),
+                            ),
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+                              secondary: Icon(Icons.vibration),
+                              value: provider.alertVibrationOn,
+                              onChanged: (va) {
+                                provider.alertVibrationOn =
+                                    !provider.alertVibrationOn;
+                              },
+                              title: Text('Vibration Alerts'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Privacy & Permissions'),
+                Consumer<SettingsProvider>(
+                  builder: (context, provider, _) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: Color(0xffffffff),
+                        elevation: 6,
+                        child: Column(
+                          children: [
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+                              secondary: Icon(Icons.location_on_outlined),
+                              value: provider.locationAccOn,
+                              onChanged: (va) {
+                                provider.locationAccOn =
+                                    !provider.locationAccOn;
+                              },
+                              title: Text('Location Access'),
+                            ),
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+                              secondary: Icon(Icons.camera_alt_outlined),
+                              value: provider.cameraAccOn,
+                              onChanged: (va) {
+                                provider.cameraAccOn = !provider.cameraAccOn;
+                              },
+                              title: Text('Camera Access'),
+                            ),
+                            SwitchListTile(
+                              activeTrackColor: Colors.blue,
+                              secondary: Icon(Icons.mic_none_outlined),
+                              value: provider.micAccOn,
+                              onChanged: (va) {
+                                provider.micAccOn = !provider.micAccOn;
+                              },
+                              title: Text('Microphone Access'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('App Preferences'),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    color: Color(0xffffffff),
+                    elevation: 6,
+                    child: Column(
+                      children: [
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Row(
+                              spacing: 10,
+                              children: [
+                                SizedBox(width: 10),
+                                Icon(provider.cardscontent[index + 5].preicon),
+                                Expanded(
+                                  child: Text(
+                                    provider.cardscontent[index + 5].title,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) =>
+                                                provider
+                                                    .cardscontent[index + 5]
                                                     .screen,
                                       ),
                                     );
@@ -170,221 +360,64 @@ class SettingsScreen extends StatelessWidget {
                               (context, index) => Divider(thickness: 1),
                           itemCount: 2,
                         ),
-
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-
-                          secondary: Icon(Icons.location_on_outlined),
-                          value: provider.settings['liveOn'] ?? false,
-                          onChanged: (va) {
-                            provider.updateSetting('liveOn', va);
-                          },
-                          title: Text('Live Location Sharing'),
-                        ),
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-
-                          secondary: Icon(Icons.watch_later_outlined),
-                          value: provider.timeron,
-                          onChanged: (va) {
-                            provider.timeron = !provider.timeron;
-                          },
-                          title: Text('Auto-SOS Timer'),
-                        ),
                       ],
                     ),
                   ),
-                );
-              },
+                ),
+              ],
             ),
-            Text('Notifications'),
-            Consumer<SettingsProvider>(
-              builder: (context, provider, _) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    color: Color(0xffffffff),
-
-                    elevation: 6,
-                    child: Column(
-                      children: [
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-
-                          secondary: Icon(Icons.notifications_none),
-                          value: provider.notificationOn,
-                          onChanged: (va) {
-                            provider.notificationOn = !provider.notificationOn;
-                          },
-                          title: Text('Push Notification'),
-                        ),
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-
-                          secondary: Icon(Icons.volume_up_outlined),
-                          value: provider.alertSoundOn,
-                          onChanged: (va) {
-                            provider.alertSoundOn = !provider.alertSoundOn;
-                          },
-                          title: Text('Alert Sounds'),
-                        ),
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-
-                          secondary: Icon(Icons.vibration),
-                          value: provider.alertVibrationOn,
-                          onChanged: (va) {
-                            provider.alertVibrationOn =
-                                !provider.alertVibrationOn;
-                          },
-                          title: Text('Vibration Alerts'),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-            Text('Privacy & Permissions'),
-            Consumer<SettingsProvider>(
-              builder: (context, provider, _) {
-                return Padding(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Help & Support'),
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     color: Color(0xffffffff),
                     elevation: 6,
                     child: Column(
                       children: [
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-                          secondary: Icon(Icons.location_on_outlined),
-                          value: provider.locationAccOn,
-                          onChanged: (va) {
-                            provider.locationAccOn = !provider.locationAccOn;
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Row(
+                              spacing: 10,
+                              children: [
+                                SizedBox(width: 10),
+                                Icon(provider.cardscontent[index + 7].preicon),
+                                Expanded(
+                                  child: Text(
+                                    provider.cardscontent[index + 7].title,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) =>
+                                                provider
+                                                    .cardscontent[index + 7]
+                                                    .screen,
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(Icons.arrow_forward_ios),
+                                ),
+                              ],
+                            );
                           },
-                          title: Text('Location Access'),
-                        ),
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-                          secondary: Icon(Icons.camera_alt_outlined),
-                          value: provider.cameraAccOn,
-                          onChanged: (va) {
-                            provider.cameraAccOn = !provider.cameraAccOn;
-                          },
-                          title: Text('Camera Access'),
-                        ),
-                        SwitchListTile(
-                          activeTrackColor: Colors.blue,
-                          secondary: Icon(Icons.mic_none_outlined),
-                          value: provider.micAccOn,
-                          onChanged: (va) {
-                            provider.micAccOn = !provider.micAccOn;
-                          },
-                          title: Text('Microphone Access'),
+                          separatorBuilder:
+                              (context, index) => Divider(thickness: 1),
+                          itemCount: 3,
                         ),
                       ],
                     ),
                   ),
-                );
-              },
-            ),
-            Text('App Preferences'),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                color: Color(0xffffffff),
-
-                elevation: 6,
-                child: Column(
-                  children: [
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Row(
-                          spacing: 10,
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(provider.cardscontent[index + 5].preicon),
-                            Expanded(
-                              child: Text(
-                                provider.cardscontent[index + 5].title,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            provider
-                                                .cardscontent[index + 5]
-                                                .screen,
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.arrow_forward_ios),
-                            ),
-                          ],
-                        );
-                      },
-                      separatorBuilder:
-                          (context, index) => Divider(thickness: 1),
-                      itemCount: 2,
-                    ),
-                  ],
                 ),
-              ),
-            ),
-            Text('Help & Support'),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                color: Color(0xffffffff),
-
-                elevation: 6,
-                child: Column(
-                  children: [
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Row(
-                          spacing: 10,
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(provider.cardscontent[index + 7].preicon),
-                            Expanded(
-                              child: Text(
-                                provider.cardscontent[index + 7].title,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            provider
-                                                .cardscontent[index + 7]
-                                                .screen,
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.arrow_forward_ios),
-                            ),
-                          ],
-                        );
-                      },
-                      separatorBuilder:
-                          (context, index) => Divider(thickness: 1),
-                      itemCount: 3,
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
             SizedBox(
               width: double.infinity,
@@ -393,10 +426,77 @@ class SettingsScreen extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AlertDialog(
+                                content: Column(
+                                  spacing: 16,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Log Out',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                    Text('Are you sure you want to log out?'),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                            ),
+                                            onPressed: () async {
+                                              await FirebaseAuth.instance
+                                                  .signOut();
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (context) =>
+                                                          LoginScreen(),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              'Log Out',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 5),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.grey[600],
+                                            ),
+                                            onPressed:
+                                                () => Navigator.pop(context),
+                                            child: Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                     child: Text('Log Out'),

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:safe_zone/features/about/ui/about_screen.dart';
+import 'package:safe_zone/features/app_theme/ui/app_theme_screen.dart';
 import 'package:safe_zone/features/change_email/ui/change_email_screen.dart';
 import 'package:safe_zone/features/change_password/ui/change_password_screen.dart';
 import 'package:safe_zone/features/emergency_trigger/ui/emergency_trigger_screen.dart';
+import 'package:safe_zone/features/faq/ui/faq_screen.dart';
+import 'package:safe_zone/features/language/ui/language_screen.dart';
 import 'package:safe_zone/features/personal_info/ui/personal_info_screen.dart';
+import 'package:safe_zone/features/report_a_problem/ui/report_a_problem_screen.dart';
 import 'package:safe_zone/features/settings/models/cardscontent.dart';
 import 'package:safe_zone/features/trusted_contacts/ui/trusted_contact_screen.dart';
 
@@ -61,27 +66,27 @@ class SettingsProvider extends ChangeNotifier {
     Cardscontent(
       preicon: Icons.language,
       title: 'Languages',
-      screen: TrustedContactScreen(),
+      screen: LanguageScreen(),
     ),
     Cardscontent(
       preicon: Icons.color_lens_outlined,
       title: 'App Theme',
-      screen: TrustedContactScreen(),
+      screen: AppThemeScreen(),
     ),
     Cardscontent(
       preicon: Icons.help_outline,
       title: 'FAQ',
-      screen: TrustedContactScreen(),
+      screen: FaqScreen(),
     ),
     Cardscontent(
       preicon: Icons.error_outline,
       title: 'Report a Problem',
-      screen: TrustedContactScreen(),
+      screen: ReportAProblemScreen(),
     ),
     Cardscontent(
       preicon: Icons.error_outline,
       title: 'About',
-      screen: TrustedContactScreen(),
+      screen: AboutScreen(),
     ),
   ];
 }

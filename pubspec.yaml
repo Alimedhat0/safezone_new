@@ -28,7 +28,7 @@ dependencies:
   fluttertoast: ^8.2.12
   google_sign_in: ^6.1.0
   audioplayers: ^5.2.0
-  intl: ^0.20.2
+  intl: ^0.19.0
   http: ^1.6.0
   maptiler_flutter: ^0.1.0  
   supabase_flutter: ^2.3.4
@@ -38,6 +38,10 @@ dependencies:
   image_picker: ^1.0.0 
   shared_preferences: ^2.2.0
   geocoding: ^2.1.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_local_notifications: ^19.5.0
+  firebase_messaging: ^16.2.0
   
   
 
@@ -56,3 +60,6 @@ flutter:
   - assests/images/
   - assests/icons/
   - .env
+  - lib/l10n/
+
+  generate: true

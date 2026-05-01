@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/login/ui/login_screen.dart';
 import 'package:safe_zone/main.dart';
 
@@ -14,6 +15,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    HomeProvider().loadLocal();
+    HomeProvider().loadTheme();
     Future.delayed(Duration(seconds: 3)).then((_) {
       Navigator.pushReplacement(
         context,

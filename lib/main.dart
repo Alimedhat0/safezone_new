@@ -2,22 +2,30 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/app_colors/theme_colors.dart';
+import 'package:safe_zone/features/about/logic/about_provider.dart';
 import 'package:safe_zone/features/change_email/logic/change_email_provider.dart';
 import 'package:safe_zone/features/change_password/logic/change_password_provider.dart';
 import 'package:safe_zone/features/edit_profile/logic/edit_profile_provider.dart';
 import 'package:safe_zone/features/emergency_contacts/logic/emergency_provider.dart';
-import 'package:safe_zone/features/emergency_contacts/ui/emergency_contact_screen.dart';
 import 'package:safe_zone/features/emergency_trigger/logic/emegency_trigger_provider.dart';
+import 'package:safe_zone/features/faq/logic/faq_provider.dart';
 import 'package:safe_zone/features/forget_password/logic/forget_password_provider.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
+import 'package:safe_zone/features/notification/logic/notification_provider.dart';
+import 'package:safe_zone/features/notification/ui/notification_screen.dart';
 import 'package:safe_zone/features/personal_info/logic/personal_info_provider.dart';
+import 'package:safe_zone/features/report_a_problem/logic/report_a_problem_provider.dart';
+import 'package:safe_zone/features/safety_guide/logic/safety_guide_provider.dart';
 import 'package:safe_zone/features/services/logic/services_provider.dart';
 import 'package:safe_zone/features/settings/logic/settings_provider.dart';
 import 'package:safe_zone/features/splash/ui/splash_screen.dart';
 import 'package:safe_zone/features/voice_activation/logic/voice_activation_provider.dart';
 import 'package:safe_zone/firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +38,13 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(
+          create:
+              (_) =>
+                  HomeProvider()
+                    ..loadLocal()
+                    ..loadTheme(),
+        ),
         ChangeNotifierProvider(
           create: (_) => GirdServicesData()..getCurrentLocation(),
         ),
@@ -47,6 +61,13 @@ void main() async {
         ChangeNotifierProvider(create: (_) => EmegencyTriggerProvider()),
         ChangeNotifierProvider(create: (_) => VoiceActivationProvider()),
         ChangeNotifierProvider(create: (_) => PersonalInfoProvider()),
+        ChangeNotifierProvider(create: (_) => FaqProvider()),
+        ChangeNotifierProvider(create: (_) => SafetyGuideProvider()),
+        ChangeNotifierProvider(create: (_) => ReportAProblemProvider()),
+        ChangeNotifierProvider(create: (_) => AboutProvider()),
+        ChangeNotifierProvider(
+          create: (_) => NotificationProvider()..initNotifications(),
+        ),
       ],
       child: MyApp(),
     ),
@@ -77,7 +98,18 @@ class MainApp extends StatelessWidget {
           );
         }
         return MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: provider.locale,
           debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: provider.themeMode,
           home: Scaffold(
             appBar: AppBar(
               title: Row(
@@ -93,7 +125,14 @@ class MainApp extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationScreen(),
+                      ),
+                    );
+                  },
                   icon: Icon(
                     Icons.notifications_none_outlined,
                     color: Colors.blue,
@@ -142,7 +181,6 @@ class MainApp extends StatelessWidget {
               ],
             ),
           ),
-          routes: {'/emergency_screen': (context) => EmergencyContactScreen()},
         );
       },
     );

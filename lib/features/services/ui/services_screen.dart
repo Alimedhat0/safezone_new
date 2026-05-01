@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_zone/features/emergency_contacts/logic/emergency_provider.dart';
+import 'package:safe_zone/features/safety_guide/ui/safety_guide_screen.dart';
 import 'package:safe_zone/features/services/logic/services_provider.dart';
 
 class ServicesScreen extends StatelessWidget {
@@ -333,7 +334,14 @@ class ServicesScreen extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SafetyGuideScreen(),
+                          ),
+                        );
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

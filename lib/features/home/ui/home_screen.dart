@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_zone/core/aspict/app_aspict.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/home_avatar.dart';
 import 'package:safe_zone/features/emergency_contacts/ui/emergency_contact_screen.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/register/model/register_model.dart';
 import 'package:safe_zone/features/trusted_contacts/ui/trusted_contact_screen.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.registerModel});
@@ -67,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Contacts',
+                                  context.tr.contacts,
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),

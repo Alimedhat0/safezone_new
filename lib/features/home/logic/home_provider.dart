@@ -9,6 +9,7 @@ import 'package:safe_zone/features/profile/ui/profile_screen.dart';
 import 'package:safe_zone/features/register/model/register_model.dart';
 import 'package:safe_zone/features/services/ui/services_screen.dart';
 import 'package:safe_zone/features/settings/ui/settings_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeProvider extends ChangeNotifier {
   RegisterModel? registerModel;
@@ -166,5 +167,39 @@ class HomeProvider extends ChangeNotifier {
     } else {
       print("Failed: ${response.statusCode}");
     }
+  }
+
+  // lanugae
+  Locale locale = Locale('en');
+
+  void changLang(String lang) async {
+    locale = Locale(lang);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('lang', lang);
+  }
+
+  void loadLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lang = prefs.getString('lang');
+    if (lang != null) {
+      locale = Locale(lang);
+      notifyListeners();
+    }
+  }
+
+  ThemeMode themeMode = ThemeMode.light;
+
+  void toggleTheme(bool isDark) async {
+    themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDark', isDark);
+    notifyListeners();
+  }
+
+  void loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isDark = prefs.getBool('isDark') ?? false;
+    themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
   }
 }
