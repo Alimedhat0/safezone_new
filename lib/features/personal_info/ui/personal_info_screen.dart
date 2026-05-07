@@ -149,8 +149,9 @@ class PersonalInfoScreen extends StatelessWidget {
                                 readonly: true,
                                 controller: provider.birthController,
                                 text: '',
-                                suffixIcon: Icon(
-                                  Icons.calendar_month,
+                                suffixIcon: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.calendar_month),
                                   color: Colors.grey,
                                 ),
                                 onTap: () async {
@@ -181,7 +182,6 @@ class PersonalInfoScreen extends StatelessWidget {
                                     personalProvider.genderList.map((gender) {
                                       return DropdownMenuItem(
                                         value: gender,
-
                                         child: Text(gender),
                                       );
                                     }).toList(),

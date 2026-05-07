@@ -5,16 +5,18 @@ class CustomTextField extends StatelessWidget {
   final String text;
   final bool readonly;
   final TextStyle? textStyle;
-  final Icon? suffixIcon;
+  final IconButton? suffixIcon;
   final Icon? prefixIcon;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final Function(String)? onSubmit;
   final Function()? onTap;
+  final bool obscureText;
   const CustomTextField({
     super.key,
     required this.controller,
     required this.text,
+    this.obscureText = false,
     this.keyboardType,
     this.validator,
     this.suffixIcon,
@@ -57,6 +59,7 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       onFieldSubmitted: onSubmit,
       onTap: onTap,
+      obscureText: obscureText,
     );
   }
 }

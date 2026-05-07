@@ -30,8 +30,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_zone/features/notification/logic/notification_provider.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
+
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NotificationProvider>().listenToNotifications();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

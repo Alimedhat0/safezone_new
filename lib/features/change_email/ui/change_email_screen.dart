@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/change_email/logic/change_email_provider.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
+import 'package:safe_zone/features/login/logic/login_provider.dart';
 
 class ChangeEmailScreen extends StatelessWidget {
   const ChangeEmailScreen({super.key});
@@ -42,7 +43,12 @@ class ChangeEmailScreen extends StatelessWidget {
                         controller: globalProvider.oldEmailController,
                         text: homeProvider.registerModel!.email,
                         readonly: true,
-                        suffixIcon: Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.lock_outline),
+                          onPressed: () {
+                            // Handle suffix icon press
+                          },
+                        ),
                       ),
                       Text(
                         'New Email Address',
@@ -96,6 +102,11 @@ class ChangeEmailScreen extends StatelessWidget {
                                       CustomTextField(
                                         controller: provider.passwordController,
                                         text: 'Password',
+                                        obscureText: true,
+                                        suffixIcon: IconButton(
+                                          icon: Icon(Icons.lock_outline),
+                                          onPressed: () {},
+                                        ),
                                       ),
                                     ],
                                   ),

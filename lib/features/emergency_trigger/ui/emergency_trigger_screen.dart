@@ -25,32 +25,6 @@ class EmergencyTriggerScreen extends StatelessWidget {
               Column(
                 spacing: 16,
                 children: [
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   height: screenHeight * 0.15,
-                  //   child: Card(
-                  //     elevation: 6,
-                  //     child: ListTile(
-                  //       onTap: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => TrustedContactScreen(),
-                  //           ),
-                  //         );
-                  //       },
-                  //       leading: Icon(Icons.mic_none_outlined),
-                  //       title: Text('Voice'),
-                  //       subtitle: Text(
-                  //         'Trigger SOS when you say a secret word',
-                  //       ),
-                  //       trailing: IconButton(
-                  //         onPressed: () {},
-                  //         icon: Icon(Icons.arrow_forward_ios),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   SizedBox(
                     width: double.infinity,
                     height: screenHeight * 0.15,
@@ -115,6 +89,7 @@ class EmergencyTriggerScreen extends StatelessWidget {
                           Card(
                             elevation: 6,
                             child: SwitchListTile(
+                              activeTrackColor: Colors.blue,
                               value: provider.settings['shake'] ?? false,
                               onChanged: (value) {
                                 provider.updateSetting('shake', value);
@@ -137,9 +112,10 @@ class EmergencyTriggerScreen extends StatelessWidget {
                           Card(
                             elevation: 6,
                             child: SwitchListTile(
-                              value: provider.powerButton,
+                              activeTrackColor: Colors.blue,
+                              value: provider.settings['power'] ?? false,
                               onChanged: (value) {
-                                provider.togglepower(value);
+                                provider.updateSetting('power', value);
                               },
                               title: Text(
                                 'Press Power Button 3 \nTimes',

@@ -9,7 +9,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/register/model/register_model.dart';
 import 'package:safe_zone/features/trusted_contacts/ui/trusted_contact_screen.dart';
-import 'package:safe_zone/l10n/generated/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.registerModel});
@@ -250,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               audioPath: path,
                               lat: grid.currentLatLng!.latitude,
                               lon: grid.currentLatLng!.longitude,
-                              uid: grid.uid,
+                              // uid: grid.uid,
                             );
                           } else {
                             print("Missing data ❌");

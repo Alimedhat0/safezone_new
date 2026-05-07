@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:safe_zone/core/services/background_services.dart';
+import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/home/models/contact_model.dart';
 import 'package:safe_zone/features/home/ui/home_screen.dart';
 import 'package:safe_zone/features/location/ui/location_screen.dart';
@@ -43,7 +45,7 @@ class HomeProvider extends ChangeNotifier {
 
   List<RegisterModel> users = [];
   bool isLoading = false;
-  void getAllUsers() async {
+  Future<void> getAllUsers() async {
     isLoading = true;
     notifyListeners();
 
@@ -56,24 +58,30 @@ class HomeProvider extends ChangeNotifier {
     users =
         result.docs.map((doc) => RegisterModel.fromMap(doc.data())).toList();
 
+    await getTrustedUsers();
+
     isLoading = false;
     notifyListeners();
   }
 
-  void getTrustedUsers() async {
-    isLoading = true;
-    notifyListeners();
+  Future<void> getTrustedUsers() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
 
     final result =
         await FirebaseFirestore.instance
             .collection('users')
-            .where('isTrusted', isNotEqualTo: false)
+            .doc(uid)
+            .collection('trustedContacts')
             .get();
 
     users =
+        users.map((user) {
+          user.isTrusted = result.docs.any((doc) => doc.id == user.uid);
+          return user;
+        }).toList();
+    trustedContacts =
         result.docs.map((doc) => RegisterModel.fromMap(doc.data())).toList();
-
-    isLoading = false;
     notifyListeners();
   }
 
@@ -126,11 +134,24 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleTrusted(RegisterModel user) {
+  Future<void> toggleTrusted(RegisterModel user) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final trustedRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('trustedContacts')
+        .doc(user.uid);
+
     if (trustedContacts.any((u) => u.uid == user.uid)) {
       trustedContacts.removeWhere((u) => u.uid == user.uid);
+      user.isTrusted = false;
+      await trustedRef.delete();
     } else {
       trustedContacts.add(user);
+      user.isTrusted = true;
+      await trustedRef.set(user.toMap());
     }
 
     notifyListeners();
@@ -202,4 +223,47 @@ class HomeProvider extends ChangeNotifier {
     themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
   }
+
+  // Future<void> initializeService() async {
+  //   final service = FlutterBackgroundService();
+
+  //   await service.configure(
+  //     androidConfiguration: AndroidConfiguration(
+  //       onStart: onStart,
+  //       isForegroundMode: true, // مهم جدًا
+  //       autoStart: true,
+  //       notificationChannelId: 'my_channel',
+  //       initialNotificationTitle: 'Safe Zone',
+  //       initialNotificationContent: 'Listening for emergency...',
+  //     ),
+  //     iosConfiguration: IosConfiguration(),
+  //   );
+  // }
+  // final speechService = SpeechService();
+  final GirdServicesData _service = GirdServicesData();
+
+  // void startVoiceDetection() async {
+  //   await speechService.startListening(() async {
+  //     print("🚨 SOS TRIGGERED");
+
+  //     await _service.init();
+
+  //     await _service.locationPer();
+  //     await _service.startLiveTracking();
+
+  //     String? path = await _service.record10Seconds();
+
+  //     if (path != null && _service.currentLatLng != null) {
+  //       _service.sendSos(
+  //         audioPath: path,
+  //         lat: _service.currentLatLng!.latitude,
+  //         lon: _service.currentLatLng!.longitude,
+  //         uid: _service.uid,
+  //       );
+  //       print('sos send by speech');
+  //     } else {
+  //       print("Missing data ❌");
+  //     }
+  //   });
+  // }
 }

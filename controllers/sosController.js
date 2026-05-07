@@ -1,6 +1,7 @@
 const { supabase } = require('../config/supabase');
 const { uploadAudio, removeAudio } = require('../services/storageService');
 const { sendSosSms } = require('../services/smsService');
+const { notifyTrustedContacts } = require('../services/notificationService');
 
 function pickAudioFile(files = []) {
   if (!Array.isArray(files) || files.length === 0) {
@@ -67,6 +68,7 @@ async function createSosEvent(req, res, next) {
     }
 
     let smsSent = false;
+    let trustedNotifications = { sent: 0, trustedCount: 0 };
 
     try {
       const smsResult = await sendSosSms({
@@ -80,6 +82,16 @@ async function createSosEvent(req, res, next) {
       console.error('SMS delivery failed:', smsError.message);
     }
 
+    try {
+      trustedNotifications = await notifyTrustedContacts({
+        userId,
+        latitude,
+        longitude,
+      });
+    } catch (notificationError) {
+      console.error('Trusted contact notification failed:', notificationError.message);
+    }
+
     return res.status(201).json({
       success: true,
       message: 'SOS received successfully.',
@@ -91,6 +103,7 @@ async function createSosEvent(req, res, next) {
         audioUrl: data.audio_url,
         createdAt: data.created_at,
         smsSent,
+        trustedNotifications,
       },
     });
   } catch (error) {

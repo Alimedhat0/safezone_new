@@ -41,7 +41,10 @@ class ChangePasswordScreen extends StatelessWidget {
                       CustomTextField(
                         controller: globalProvider.currentPasswordController,
                         text: 'Enter current password',
-                        suffixIcon: Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.lock_outline),
+                          onPressed: () {},
+                        ),
                       ),
                       Text(
                         'New Password',

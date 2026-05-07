@@ -55,7 +55,10 @@ class RegisterScreen extends StatelessWidget {
                             controller: regProvider.passwordController,
                             text: 'Password',
                             prefixIcon: Icon(Icons.lock_outline),
-                            suffixIcon: Icon(Icons.remove_red_eye_outlined),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.remove_red_eye_outlined),
+                              onPressed: () {},
+                            ),
                           ),
                           CustomTextField(
                             controller: regProvider.phoneController,

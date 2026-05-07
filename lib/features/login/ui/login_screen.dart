@@ -16,13 +16,19 @@ class LoginScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => LoginProvider(),
       child: Scaffold(
-        appBar: AppBar(title: Text('Log in')),
+        appBar: AppBar(title: Text('Log in'), centerTitle: true),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: Column(
+            spacing: 20,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: screenHeight * 0.15, width: screenWidth),
+              // SizedBox(height: screenHeight * 0.15, width: screenWidth),
+              Image.asset(
+                'assests/images/photo_2026-03-24_21-13-29_copy.jpg',
+                height: screenHeight * 0.15,
+              ),
+
               Consumer<LoginProvider>(
                 builder: (context, provider, child) {
                   return Form(
@@ -45,8 +51,21 @@ class LoginScreen extends StatelessWidget {
                           controller: provider.passwordController,
                           text: 'Password',
                           prefixIcon: Icon(Icons.lock_outline),
-                          suffixIcon: Icon(Icons.remove_red_eye_outlined),
-
+                          suffixIcon:
+                              provider.isvisible
+                                  ? IconButton(
+                                    icon: Icon(Icons.visibility_off_outlined),
+                                    onPressed: () {
+                                      provider.togglePasswordVisibility();
+                                    },
+                                  )
+                                  : IconButton(
+                                    icon: Icon(Icons.remove_red_eye_outlined),
+                                    onPressed: () {
+                                      provider.togglePasswordVisibility();
+                                    },
+                                  ),
+                          obscureText: provider.isvisible,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your Password';
@@ -108,7 +127,7 @@ class LoginScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(
-                          width: screenWidth,
+                          width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               elevation: 6,

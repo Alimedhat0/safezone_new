@@ -23,7 +23,10 @@ class AppThemeScreen extends StatelessWidget {
                       provider.toggleTheme(false);
                     },
                     title: 'Light Mood',
-                    secondry: CircleAvatar(child: Icon(Icons.light_mode)),
+                    secondry: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.light_mode, color: Colors.amber),
+                    ),
                   ),
                   ThemeTile(
                     value: ThemeMode.dark,
@@ -32,7 +35,10 @@ class AppThemeScreen extends StatelessWidget {
                       provider.toggleTheme(true);
                     },
                     title: 'Dark Mood',
-                    secondry: CircleAvatar(child: Icon(Icons.dark_mode)),
+                    secondry: CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: Icon(Icons.dark_mode, color: Colors.white),
+                    ),
                   ),
                 ],
               );

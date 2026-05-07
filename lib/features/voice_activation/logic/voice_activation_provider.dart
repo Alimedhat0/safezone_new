@@ -4,13 +4,19 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:safe_zone/core/services/background_services.dart';
 import 'package:safe_zone/features/voice_activation/models/secret_word_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class VoiceActivationProvider extends ChangeNotifier {
+  VoiceActivationProvider() {
+    isBackgroundListening = isVoiceServiceRunning;
+  }
+
   String selectedOption = 'Medium';
   List<String> options = ['Low', 'Medium', 'High'];
   void changeOptions(String value) {
@@ -19,14 +25,20 @@ class VoiceActivationProvider extends ChangeNotifier {
   }
 
   final FlutterSoundRecorder recorder = FlutterSoundRecorder();
+  final TextEditingController keywordController = TextEditingController();
 
   bool isRecording = false;
   bool isRecorderReady = false;
+  bool isSavingKeyword = false;
+  bool isBackgroundListening = false;
+  bool isTogglingBackgroundListening = false;
+  String? _pendingKeyword;
 
   String? recordedPath;
 
   Future initRecorder() async {
-    // await Permission.microphone.request();
+    if (isRecorderReady) return;
+
     final status = await Permission.microphone.request();
 
     if (!status.isGranted) {
@@ -38,6 +50,37 @@ class VoiceActivationProvider extends ChangeNotifier {
     recorder.setSubscriptionDuration(const Duration(milliseconds: 200));
 
     isRecorderReady = true;
+  }
+
+  Future<void> toggleKeywordRecording() async {
+    if (isSavingKeyword) return;
+
+    if (!isRecording) {
+      final keyword = keywordController.text.trim().toLowerCase();
+      if (keyword.isEmpty) {
+        Fluttertoast.showToast(msg: "Please enter a keyword first");
+        return;
+      }
+
+      _pendingKeyword = keyword;
+      await initRecorder();
+      await startRecording();
+      return;
+    }
+
+    isSavingKeyword = true;
+    notifyListeners();
+
+    try {
+      final keyword =
+          (_pendingKeyword ?? keywordController.text.trim().toLowerCase())
+              .trim();
+      await stopRecording(keyword: keyword);
+      _pendingKeyword = null;
+    } finally {
+      isSavingKeyword = false;
+      notifyListeners();
+    }
   }
 
   Future startRecording() async {
@@ -53,19 +96,45 @@ class VoiceActivationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String?> stopRecording() async {
+  Future<String?> stopRecording({required String keyword}) async {
     final path = await recorder.stopRecorder();
     isRecording = false;
     if (path != null) {
       try {
+        final normalizedKeyword = keyword.trim().toLowerCase();
+        if (normalizedKeyword.isEmpty) {
+          throw Exception("Keyword is empty");
+        }
+
         final url = await uploadAudio(path);
-        await sendToFirebase(url);
+        await sendToFirebase(url, normalizedKeyword);
+        keywordController.clear();
       } catch (e) {
         print("Upload error: $e");
+        Fluttertoast.showToast(msg: "Failed to save keyword");
       }
     }
     notifyListeners();
     return path;
+  }
+
+  Future<void> toggleBackgroundListening() async {
+    if (isTogglingBackgroundListening) return;
+
+    isTogglingBackgroundListening = true;
+    notifyListeners();
+
+    final success =
+        isBackgroundListening
+            ? await stopVoiceService()
+            : await startVoiceService();
+
+    if (success) {
+      isBackgroundListening = !isBackgroundListening;
+    }
+
+    isTogglingBackgroundListening = false;
+    notifyListeners();
   }
 
   final supabase = Supabase.instance.client;
@@ -95,18 +164,29 @@ class VoiceActivationProvider extends ChangeNotifier {
     await player.startPlayer(fromURI: url, codec: Codec.aacADTS);
   }
 
-  Future<void> sendToFirebase(String url) async {
+  Future<void> sendToFirebase(String url, String keyword) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
     final uid = user.uid;
     final messageId = DateTime.now().millisecondsSinceEpoch.toString();
 
-    final audioFire = SecretWordModel(uid: uid, path: url, id: messageId);
+    final audioFire = SecretWordModel(
+      uid: uid,
+      path: url,
+      keyword: keyword,
+      id: messageId,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+    );
 
     await FirebaseFirestore.instance
         .collection('secretword')
         .doc(messageId)
         .set(audioFire.toMap());
+
+    await saveAndSyncVoiceKeywords([
+      ...audioList.map((item) => item.keyword),
+      keyword,
+    ]);
   }
 
   StreamSubscription? _subscription;
@@ -129,11 +209,8 @@ class VoiceActivationProvider extends ChangeNotifier {
               event.docs
                   .map((e) => SecretWordModel.fromMap(e.data(), e.id))
                   .toList();
-
-          // for (var doc in event.docs) {
-          //   final secretword = SecretWordModel.fromMap(doc.data(), doc.id);
-          //   audioList.add(secretword);
-          // }
+          audioList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          saveAndSyncVoiceKeywords(audioList.map((item) => item.keyword).toList());
 
           notifyListeners();
         });
@@ -141,17 +218,22 @@ class VoiceActivationProvider extends ChangeNotifier {
 
   Future<void> deleteAudio(SecretWordModel audio) async {
     try {
-      // 🗑️ 1. حذف من Supabase
       final uri = Uri.parse(audio.path);
       final filePath = uri.pathSegments.last;
 
       await supabase.storage.from('secretword').remove(['records/$filePath']);
 
-      // 🗑️ 2. حذف من Firestore
       await FirebaseFirestore.instance
           .collection('secretword')
           .doc(audio.id)
           .delete();
+
+      await saveAndSyncVoiceKeywords(
+        audioList
+            .where((item) => item.id != audio.id)
+            .map((item) => item.keyword)
+            .toList(),
+      );
     } catch (e) {
       print("Delete error: $e");
     }
@@ -175,6 +257,7 @@ class VoiceActivationProvider extends ChangeNotifier {
     _subscription?.cancel();
     player.closePlayer();
     recorder.closeRecorder();
+    keywordController.dispose();
     super.dispose();
   }
 }

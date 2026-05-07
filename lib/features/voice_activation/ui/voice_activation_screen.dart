@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:safe_zone/core/aspict/app_aspict.dart';
 import 'package:safe_zone/features/voice_activation/logic/voice_activation_provider.dart';
 
 class VoiceActivationScreen extends StatelessWidget {
@@ -26,7 +26,6 @@ class VoiceActivationScreen extends StatelessWidget {
                         Text('Set Your Emegency Keyword'),
                         SizedBox(
                           width: double.infinity,
-                          height: screenHeight * 0.3,
                           child: Card(
                             elevation: 6,
                             child: Padding(
@@ -34,6 +33,16 @@ class VoiceActivationScreen extends StatelessWidget {
                               child: Column(
                                 spacing: 15,
                                 children: [
+                                  TextField(
+                                    controller: provider.keywordController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Keyword you will say',
+                                      hintText: 'ex: help me',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  ),
                                   CircleAvatar(
                                     backgroundColor:
                                         provider.isRecording
@@ -62,23 +71,20 @@ class VoiceActivationScreen extends StatelessWidget {
                                               : Colors.blue,
                                     ),
                                     onPressed:
-                                        provider.audioList.length >= 2
+                                        provider.isSavingKeyword
                                             ? null
-                                            : () async {
-                                              if (!provider.isRecording) {
-                                                await provider.initRecorder();
-                                                await provider.startRecording();
-                                              } else {
-                                                final path =
-                                                    await provider
-                                                        .stopRecording();
-                                                if (path != null) {}
-                                              }
-                                            },
+                                            : provider.toggleKeywordRecording,
                                     child:
-                                        provider.isRecording
+                                        provider.isSavingKeyword
                                             ? Text(
-                                              'Recording...',
+                                              'Saving...',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                            : provider.isRecording
+                                            ? Text(
+                                              'Tap to Save Keyword',
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
@@ -118,6 +124,7 @@ class VoiceActivationScreen extends StatelessWidget {
                                       children: [
                                         ListTile(
                                           leading: CircleAvatar(
+                                            backgroundColor: Colors.greenAccent,
                                             child: IconButton(
                                               onPressed: () async {
                                                 await provider.initPlayer();
@@ -127,12 +134,25 @@ class VoiceActivationScreen extends StatelessWidget {
                                                       .path,
                                                 );
                                               },
-                                              icon: Icon(Icons.play_arrow),
+                                              icon: Icon(
+                                                Icons.play_arrow_outlined,
+                                                color: Colors.green,
+                                                size: 24,
+                                              ),
                                             ),
                                           ),
                                           title: Text(
                                             'Preview your recorded keyword',
                                           ),
+                                          subtitle:
+                                              provider
+                                                      .audioList[index]
+                                                      .keyword
+                                                      .isEmpty
+                                                  ? null
+                                                  : Text(
+                                                    'Keyword: ${provider.audioList[index].keyword}',
+                                                  ),
                                           trailing: IconButton(
                                             onPressed: () {
                                               showDialog(
@@ -179,10 +199,9 @@ class VoiceActivationScreen extends StatelessWidget {
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.blue,
                                             ),
-                                            onPressed: () async {
-                                              await provider.initPlayer();
-                                              await provider.playAudio(
-                                                provider.audioList[index].path,
+                                            onPressed: () {
+                                              Fluttertoast.showToast(
+                                                msg: 'Saved Successfully',
                                               );
                                             },
                                             child: Text(
@@ -223,6 +242,35 @@ class VoiceActivationScreen extends StatelessWidget {
                           onChanged: (value) {
                             provider.selectedOption = value!;
                           },
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  provider.isBackgroundListening
+                                      ? Colors.red
+                                      : Colors.blue,
+                            ),
+                            onPressed:
+                                provider.isTogglingBackgroundListening
+                                    ? null
+                                    : provider.toggleBackgroundListening,
+                            icon: Icon(
+                              provider.isBackgroundListening
+                                  ? Icons.stop
+                                  : Icons.hearing,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              provider.isTogglingBackgroundListening
+                                  ? 'Please wait...'
+                                  : provider.isBackgroundListening
+                                  ? 'Stop Background Listening'
+                                  : 'Start Background Listening',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ),
                         if (provider.audioList.isNotEmpty)
                           SizedBox(

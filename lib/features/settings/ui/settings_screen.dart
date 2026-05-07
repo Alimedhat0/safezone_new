@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/features/delete_account/ui/delete_account_screen.dart';
 import 'package:safe_zone/features/edit_profile/logic/edit_profile_provider.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/login/ui/login_screen.dart';
@@ -187,7 +188,6 @@ class SettingsScreen extends StatelessWidget {
 
                             SwitchListTile(
                               activeTrackColor: Colors.blue,
-
                               secondary: Icon(Icons.location_on_outlined),
                               value: provider.settings['liveOn'] ?? false,
                               onChanged: (va) {
@@ -199,9 +199,9 @@ class SettingsScreen extends StatelessWidget {
                               activeTrackColor: Colors.blue,
 
                               secondary: Icon(Icons.watch_later_outlined),
-                              value: provider.timeron,
+                              value: provider.settings['timeron'] ?? false,
                               onChanged: (va) {
-                                provider.timeron = !provider.timeron;
+                                provider.updateSetting('timeron', va);
                               },
                               title: Text('Auto-SOS Timer'),
                             ),
@@ -230,29 +230,30 @@ class SettingsScreen extends StatelessWidget {
                             SwitchListTile(
                               activeTrackColor: Colors.blue,
                               secondary: Icon(Icons.notifications_none),
-                              value: provider.notificationOn,
+                              value:
+                                  provider.settings['notificationOn'] ?? false,
                               onChanged: (va) {
-                                provider.notificationOn =
-                                    !provider.notificationOn;
+                                provider.updateSetting('notificationOn', va);
                               },
                               title: Text('Push Notification'),
                             ),
                             SwitchListTile(
                               activeTrackColor: Colors.blue,
                               secondary: Icon(Icons.volume_up_outlined),
-                              value: provider.alertSoundOn,
+                              value: provider.settings['alertSoundOn'] ?? false,
                               onChanged: (va) {
-                                provider.alertSoundOn = !provider.alertSoundOn;
+                                provider.updateSetting('alertSoundOn', va);
                               },
                               title: Text('Alert Sounds'),
                             ),
                             SwitchListTile(
                               activeTrackColor: Colors.blue,
                               secondary: Icon(Icons.vibration),
-                              value: provider.alertVibrationOn,
+                              value:
+                                  provider.settings['alertVibrationOn'] ??
+                                  false,
                               onChanged: (va) {
-                                provider.alertVibrationOn =
-                                    !provider.alertVibrationOn;
+                                provider.updateSetting('alertVibrationOn', va);
                               },
                               title: Text('Vibration Alerts'),
                             ),
@@ -280,28 +281,28 @@ class SettingsScreen extends StatelessWidget {
                             SwitchListTile(
                               activeTrackColor: Colors.blue,
                               secondary: Icon(Icons.location_on_outlined),
-                              value: provider.locationAccOn,
+                              value:
+                                  provider.settings['locationAccOn'] ?? false,
                               onChanged: (va) {
-                                provider.locationAccOn =
-                                    !provider.locationAccOn;
+                                provider.updateSetting('locationAccOn', va);
                               },
                               title: Text('Location Access'),
                             ),
                             SwitchListTile(
                               activeTrackColor: Colors.blue,
                               secondary: Icon(Icons.camera_alt_outlined),
-                              value: provider.cameraAccOn,
+                              value: provider.settings['cameraAccOn'] ?? false,
                               onChanged: (va) {
-                                provider.cameraAccOn = !provider.cameraAccOn;
+                                provider.updateSetting('cameraAccOn', va);
                               },
                               title: Text('Camera Access'),
                             ),
                             SwitchListTile(
                               activeTrackColor: Colors.blue,
                               secondary: Icon(Icons.mic_none_outlined),
-                              value: provider.micAccOn,
+                              value: provider.settings['micAccOn'] ?? false,
                               onChanged: (va) {
-                                provider.micAccOn = !provider.micAccOn;
+                                provider.updateSetting('micAccOn', va);
                               },
                               title: Text('Microphone Access'),
                             ),
@@ -464,6 +465,7 @@ class SettingsScreen extends StatelessWidget {
                                                           LoginScreen(),
                                                 ),
                                               );
+                                              provider.clearUid();
                                             },
                                             child: Text(
                                               'Log Out',
@@ -502,7 +504,14 @@ class SettingsScreen extends StatelessWidget {
                     child: Text('Log Out'),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DeleteAccountScreen(),
+                        ),
+                      );
+                    },
                     child: Text(
                       'Delete Account',
                       style: TextStyle(color: Colors.red),

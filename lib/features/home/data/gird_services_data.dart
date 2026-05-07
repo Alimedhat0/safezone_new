@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:geocoding/geocoding.dart';
@@ -10,7 +9,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:safe_zone/features/home/models/grid_services_model.dart';
+import 'package:safe_zone/features/notification/logic/notification_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GirdServicesData extends ChangeNotifier {
   List<GridServicesModel> gridServicesModel = [
@@ -142,7 +143,14 @@ class GirdServicesData extends ChangeNotifier {
   bool _isInit = false;
 
   Future<void> init() async {
-    await Permission.microphone.request();
+    if (_isInit) return;
+
+    final microphoneStatus = await Permission.microphone.request();
+    if (!microphoneStatus.isGranted) {
+      print("❌ Microphone permission denied");
+      return;
+    }
+
     await _recorder.openRecorder();
     _isInit = true;
   }
@@ -174,14 +182,28 @@ class GirdServicesData extends ChangeNotifier {
     await _recorder.closeRecorder();
   }
 
-  String uid = FirebaseAuth.instance.currentUser!.uid;
+  Future<void> saveUserUid(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("uid", uid);
+  }
+
+  Future<String?> getStoredUid() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("uid");
+  }
 
   Future<void> sendSos({
     required String audioPath,
     required double lat,
     required double lon,
-    required String uid,
+    // required String uid,
   }) async {
+    final uid = await getStoredUid();
+    if (uid == null) {
+      print("❌ No stored UID");
+      return;
+    }
+
     final uri = Uri.parse("http://192.168.1.7:3000/api/sos");
 
     var request = http.MultipartRequest("POST", uri);
@@ -195,9 +217,35 @@ class GirdServicesData extends ChangeNotifier {
     var response = await request.send();
 
     if (response.statusCode == 200 || response.statusCode == 201) {
+      await NotificationProvider().showNotification();
       print("SOS sent successfully 🔥");
     } else {
       print("Failed: ${response.statusCode}");
     }
+  }
+
+  Future<void> triggerVoiceSos() async {
+    await init();
+    if (!_isInit) return;
+
+    await locationPer();
+
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.best,
+    );
+    currentLatLng = LatLng(position.latitude, position.longitude);
+
+    final audioPath = await record10Seconds();
+    if (audioPath == null || currentLatLng == null) {
+      print("Missing voice SOS data ❌");
+      return;
+    }
+
+    await sendSos(
+      audioPath: audioPath,
+      lat: currentLatLng!.latitude,
+      lon: currentLatLng!.longitude,
+    );
+    print('sos sendby speech');
   }
 }
