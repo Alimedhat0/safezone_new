@@ -8,8 +8,10 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:safe_zone/features/home/models/after_sos_model.dart';
 import 'package:safe_zone/features/home/models/grid_services_model.dart';
 import 'package:safe_zone/features/notification/logic/notification_provider.dart';
+import 'package:safe_zone/features/sos/ui/sos_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -82,13 +84,13 @@ class GirdServicesData extends ChangeNotifier {
 
   Future<void> shareLocation() async {
     try {
-      if (location == null) {
-        await locationPer();
-        await getCurrentLocation();
+      await locationPer();
+      await getCurrentLocation();
+      if (location != null) {
+        await Share.share(
+          'https://www.google.com/maps/search/?api=1&query=$location',
+        );
       }
-      await Share.share(
-        'https://www.google.com/maps/search/?api=1&query=$location',
-      );
     } catch (e) {
       print('Error with shareLocation:$e');
     }
@@ -248,4 +250,21 @@ class GirdServicesData extends ChangeNotifier {
     );
     print('sos sendby speech');
   }
+
+  Future<void> cancelSOS() async {}
+
+  List<AfterSosModel> afterSos = [
+    AfterSosModel(
+      title: 'Emergency contacts notified',
+      subtitle: 'contacts received your alert',
+    ),
+    AfterSosModel(
+      title: 'Live location sharing active',
+      subtitle: 'Updates every 30 seconds',
+    ),
+    AfterSosModel(
+      title: 'Voice note shared',
+      subtitle: '10 second recording sent',
+    ),
+  ];
 }

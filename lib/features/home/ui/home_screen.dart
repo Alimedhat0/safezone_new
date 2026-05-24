@@ -8,6 +8,7 @@ import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/register/model/register_model.dart';
+import 'package:safe_zone/features/sos/ui/sos_screen.dart';
 import 'package:safe_zone/features/trusted_contacts/ui/trusted_contact_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -238,10 +239,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onPressed: () async {
                           await grid.init();
-
                           await grid.locationPer();
                           await grid.startLiveTracking();
-
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SosScreen(),
+                            ),
+                          );
                           String? path = await grid.record10Seconds();
 
                           if (path != null && grid.currentLatLng != null) {
