@@ -83,7 +83,7 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    Text(provider.users[index].email),
+                                    Text(provider.users[index].phone),
                                   ],
                                 ),
                               ),

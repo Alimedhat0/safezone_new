@@ -12,9 +12,9 @@ Widget avatar(BuildContext context, String text, String phone) {
           children: [
             CircleAvatar(
               backgroundColor: Colors.white,
-              radius: 30,
+              radius: 24,
               child: CircleAvatar(
-                radius: 28,
+                radius: 22,
                 backgroundColor: Colors.blue,
                 child: Icon(Icons.person, color: Colors.white),
               ),

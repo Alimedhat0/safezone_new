@@ -177,7 +177,7 @@ class MainApp extends StatelessWidget {
                   backgroundColor: Colors.black,
                   selectedItemColor: Colors.blue.shade400,
                   unselectedItemColor: Colors.grey.shade500,
-                  selectedFontSize: 12,
+                  selectedFontSize: 11,
                   unselectedFontSize: 11,
                   currentIndex: provider.currentIndex,
                   onTap: provider.channgeIndex,

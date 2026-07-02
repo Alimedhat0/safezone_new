@@ -18,6 +18,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GirdServicesData extends ChangeNotifier {
+  static const Duration _liveLocationUpdateInterval = Duration(seconds: 30);
+  static const int _liveLocationDistanceFilterMeters = 10;
+
+  bool _isGettingCurrentLocation = false;
+  DateTime? _lastLiveLocationUpdate;
+
   List<GridServicesModel> localizedGridServices(AppLocalizations l10n) => [
     GridServicesModel(
       image: 'assests/svgs/share.svg',
@@ -48,13 +54,17 @@ class GirdServicesData extends ChangeNotifier {
   String? location;
   String? locationName;
   Future<void> getCurrentLocation() async {
+    if (_isGettingCurrentLocation) return;
+
+    _isGettingCurrentLocation = true;
     try {
       final hasPermission = await locationPer();
       if (!hasPermission) return;
 
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
+        desiredAccuracy: LocationAccuracy.high,
       );
+      currentLatLng = LatLng(position.latitude, position.longitude);
       location = '${position.latitude}, ${position.longitude}';
       locationName = await getLocationName(
         position.latitude,
@@ -63,6 +73,8 @@ class GirdServicesData extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print('Error with getcurrentlovation:$e');
+    } finally {
+      _isGettingCurrentLocation = false;
     }
   }
 
@@ -99,22 +111,30 @@ class GirdServicesData extends ChangeNotifier {
   List<LatLng> path = [];
 
   Future<void> startLiveTracking() async {
+    if (positionStream != null) return;
+
     final hasPermission = await locationPer();
     if (!hasPermission) {
       return;
     }
 
-    if (positionStream != null) return;
-
     positionStream = Geolocator.getPositionStream(
       locationSettings: LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 1,
+        accuracy: LocationAccuracy.high,
+        distanceFilter: _liveLocationDistanceFilterMeters,
       ),
     ).listen((Position position) {
+      final now = DateTime.now();
+      if (_lastLiveLocationUpdate != null &&
+          now.difference(_lastLiveLocationUpdate!) <
+              _liveLocationUpdateInterval) {
+        return;
+      }
+
+      _lastLiveLocationUpdate = now;
       currentLatLng = LatLng(position.latitude, position.longitude);
-      notifyListeners();
       path.add(currentLatLng!);
+      notifyListeners();
     });
     notifyListeners();
   }
@@ -123,6 +143,7 @@ class GirdServicesData extends ChangeNotifier {
     positionStream?.cancel();
     positionStream = null;
     liveLocation = null;
+    _lastLiveLocationUpdate = null;
     print('Stop');
     notifyListeners();
   }

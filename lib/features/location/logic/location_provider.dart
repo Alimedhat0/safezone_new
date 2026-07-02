@@ -27,7 +27,12 @@ class LocationProvider extends ChangeNotifier {
 
     currentLocation = LatLng(position.latitude, position.longitude);
 
-    mapController.move(currentLocation!, 15);
+    moveTo(currentLocation!);
+  }
+
+  void moveTo(LatLng location, {double zoom = 15}) {
+    currentLocation = location;
+    mapController.move(location, zoom);
     notifyListeners();
   }
 }

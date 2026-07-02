@@ -21,7 +21,7 @@ class MessageScreen extends StatelessWidget {
                 ..initPlayer(),
       builder:
           (context, child) => Scaffold(
-            backgroundColor: const Color(0xffF8FAFC),
+            // backgroundColor: const Color(0xffF8FAFC),
             appBar: _buildAppBar(context),
             body: Consumer<MessageProvider>(
               builder: (context, provider, _) {

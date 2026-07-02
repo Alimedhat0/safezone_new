@@ -26,9 +26,21 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
   void initState() {
     super.initState();
     context.read<HomeProvider>().getUser();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeProvider>().getTrustedUsers();
-      context.read<LocationProvider>().getCurrentLocation();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
+      final homeProvider = context.read<HomeProvider>();
+      final gridProvider = context.read<GirdServicesData>();
+      final locationProvider = context.read<LocationProvider>();
+
+      await homeProvider.getTrustedUsers();
+      await gridProvider.getCurrentLocation();
+
+      if (!mounted) return;
+      final currentLocation = gridProvider.currentLatLng;
+      if (currentLocation != null) {
+        locationProvider.moveTo(currentLocation);
+      }
     });
   }
 
@@ -38,7 +50,8 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
       builder: (context) {
         final homePro = context.read<HomeProvider>();
         final locationPro = context.watch<LocationProvider>();
-        final grid = Provider.of<GirdServicesData>(context);
+        final grid = context.watch<GirdServicesData>();
+        final currentLocation = grid.currentLatLng;
 
         return SizedBox(
           width: screenWidth,
@@ -65,8 +78,8 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                             end: Alignment.bottomCenter,
                           ),
                           borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(50),
-                            bottomRight: Radius.circular(50),
+                            bottomLeft: Radius.circular(120),
+                            bottomRight: Radius.circular(120),
                           ),
                         ),
                       ),
@@ -78,6 +91,7 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                         ),
                         height: 200,
                         child: Row(
+                          spacing: 5,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Expanded(
@@ -124,18 +138,30 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                 ),
                               ),
                             ),
+                            CircleAvatar(
+                              backgroundColor: Colors.black,
+                              child: IconButton(
+                                onPressed: () {
+                                  grid.stopTracking();
+                                },
+                                icon: const Icon(
+                                  Icons.stop,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
 
                       Positioned(
                         bottom: 0,
-                        height: 350,
+                        height: screenHeight * 0.4,
                         width: screenWidth,
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(50),
-                            bottomRight: Radius.circular(50),
+                            bottomLeft: Radius.circular(120),
+                            bottomRight: Radius.circular(120),
                           ),
                           child: Stack(
                             clipBehavior: Clip.antiAlias,
@@ -144,6 +170,7 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                 mapController: locationPro.mapController,
                                 options: MapOptions(
                                   initialCenter:
+                                      currentLocation ??
                                       locationPro.currentLocation ??
                                       const LatLng(30.0444, 31.2357),
                                   initialZoom: 15,
@@ -154,15 +181,15 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                         'https://api.maptiler.com/maps/${locationPro.selectedMapStyle}/{z}/{x}/{y}.png?key=${locationPro.apiKey}',
                                     userAgentPackageName: 'com.example.app',
                                   ),
-                                  if (locationPro.currentLocation != null)
+                                  if (currentLocation != null)
                                     MarkerLayer(
                                       markers: [
                                         Marker(
-                                          point: locationPro.currentLocation!,
+                                          point: currentLocation,
                                           width: 80,
                                           height: 80,
                                           child: const Icon(
-                                            Icons.my_location,
+                                            Icons.circle,
                                             color: Colors.blue,
                                             size: 40,
                                           ),
@@ -179,7 +206,13 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                   children: [
                                     FloatingActionButton.small(
                                       backgroundColor: Colors.black,
-                                      onPressed: locationPro.getCurrentLocation,
+                                      onPressed: () async {
+                                        await grid.getCurrentLocation();
+                                        final location = grid.currentLatLng;
+                                        if (location != null) {
+                                          locationPro.moveTo(location);
+                                        }
+                                      },
                                       child: const Icon(
                                         Icons.my_location,
                                         color: Colors.blue,
@@ -195,6 +228,8 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
 
                       Positioned(
                         top: 150,
+                        right: 2,
+                        left: 2,
                         child: Card(
                           elevation: 6,
                           color: Colors.black,
@@ -221,8 +256,8 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 100,
-                                      width: screenWidth * 0.69,
+                                      height: 90,
+                                      width: screenWidth * 0.65,
                                       child: Consumer<HomeProvider>(
                                         builder: (context, provider, _) {
                                           if (provider
@@ -321,7 +356,7 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
 
                       Positioned(
                         left: 130,
-                        top: 520,
+                        top: screenHeight * 0.55,
                         child: CircleAvatar(
                           radius: 80,
                           backgroundColor: Colors.white,
@@ -339,10 +374,11 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                 shadowColor: Colors.red[100],
                               ),
                               onPressed: () async {
+                                final navigator = Navigator.of(context);
                                 await grid.init();
                                 await grid.startLiveTracking();
-                                Navigator.push(
-                                  context,
+                                if (!mounted) return;
+                                navigator.push(
                                   MaterialPageRoute(
                                     builder: (context) => const SosScreen(),
                                   ),
@@ -357,7 +393,7 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                     lon: grid.currentLatLng!.longitude,
                                   );
                                 } else {
-                                  print("Missing data ❌");
+                                  debugPrint("Missing data ❌");
                                 }
                               },
                               child: const Text(
@@ -374,66 +410,71 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                     ],
                   ),
                   const SizedBox(height: 80),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 8,
-                      ),
-                      child: Row(
-                        spacing: 10,
-                        children: [
-                          const CircleAvatar(
-                            child: Icon(
-                              Icons.location_on,
-                              color: Colors.blue,
-                              size: 24,
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Live Location',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  'Sharing your location',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                Text(
-                                  grid.locationName.toString(),
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(
-                                255,
-                                208,
-                                232,
-                                244,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 8,
+                        ),
+                        child: Row(
+                          spacing: 10,
+                          children: [
+                            const CircleAvatar(
+                              child: Icon(
+                                Icons.location_on,
+                                color: Colors.blue,
+                                size: 24,
                               ),
                             ),
-                            onPressed: grid.startLiveTracking,
-                            child: const Row(
-                              spacing: 5,
-                              children: [
-                                Icon(
-                                  Icons.broadcast_on_home,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  'Live',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Live Location',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Sharing your location',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  Text(
+                                    (grid.locationName.toString()),
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  208,
+                                  232,
+                                  244,
+                                ),
+                              ),
+                              onPressed: grid.startLiveTracking,
+                              child: const Row(
+                                spacing: 5,
+                                children: [
+                                  Icon(
+                                    Icons.broadcast_on_home,
+                                    color: Colors.blue,
+                                  ),
+                                  Text(
+                                    'Live',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

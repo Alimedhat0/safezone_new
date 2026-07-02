@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safe_zone/features/home/models/contact_model.dart';
-import 'package:safe_zone/features/home/ui/home_screen.dart';
 import 'package:safe_zone/features/home/ui/second_home_screen.dart';
 import 'package:safe_zone/features/location/ui/location_screen.dart';
 import 'package:safe_zone/features/profile/ui/profile_screen.dart';
