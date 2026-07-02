@@ -26,7 +26,7 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('trusted')),
+      appBar: AppBar(title: Text('Add Contacts')),
       body: Consumer<HomeProvider>(
         builder: (context, value, child) {
           final provider = context.read<HomeProvider>();

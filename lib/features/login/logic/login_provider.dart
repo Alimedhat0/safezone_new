@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/notification/logic/notification_provider.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 import 'package:safe_zone/main.dart';
 
 class LoginProvider extends ChangeNotifier {
@@ -18,6 +19,7 @@ class LoginProvider extends ChangeNotifier {
 
   Future<void> login(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
     isLoading = true;
     notifyListeners();
     try {
@@ -25,7 +27,7 @@ class LoginProvider extends ChangeNotifier {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      Fluttertoast.showToast(msg: 'Login Successfully');
+      Fluttertoast.showToast(msg: l10n.login_successfully);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => MainApp()),
@@ -39,10 +41,11 @@ class LoginProvider extends ChangeNotifier {
       }
     } catch (e) {
       print('Erorr With login :$e');
-      Fluttertoast.showToast(msg: 'An error occurred');
+      Fluttertoast.showToast(msg: l10n.an_error_occurred);
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
   }
 
   Future<UserCredential?> signInWithGoogle() async {

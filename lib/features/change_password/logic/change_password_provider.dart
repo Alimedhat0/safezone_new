@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 
 class ChangePasswordProvider extends ChangeNotifier {
   final currentPasswordController = TextEditingController();
@@ -9,9 +10,11 @@ class ChangePasswordProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   bool isLoading = false;
   Future<void> updatePassword(
+    BuildContext context,
     String newPassword,
     String currentPassword,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     isLoading = true;
     notifyListeners();
     try {
@@ -23,7 +26,6 @@ class ChangePasswordProvider extends ChangeNotifier {
 
       final email = user.email!;
 
-      // 🔐 1. Re-auth
       final credential = EmailAuthProvider.credential(
         email: email,
         password: currentPassword,
@@ -31,20 +33,19 @@ class ChangePasswordProvider extends ChangeNotifier {
 
       await user.reauthenticateWithCredential(credential);
 
-      // 🔑 2. Update password
       await user.updatePassword(newPassword);
-      Fluttertoast.showToast(msg: "Password updated successfully");
+      Fluttertoast.showToast(msg: l10n.password_updated_successfully);
 
       currentPasswordController.clear();
       newPasswordController.clear();
       confirmPasswordController.clear();
 
-      // 🎉 Success
       print("Password updated successfully");
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
   }
 }

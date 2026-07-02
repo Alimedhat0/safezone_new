@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:safe_zone/core/services/background_services.dart';
 import 'package:safe_zone/features/login/ui/login_screen.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -12,12 +13,12 @@ class DeleteAccountProvider extends ChangeNotifier {
   final SupabaseClient _supabase = Supabase.instance.client;
   static const int _batchLimit = 200;
 
-  List<String> listCard = [
-    '• Permanently delete all your personal data',
-    '• Remove all emergency contacts and settings',
-    '• Delete your location history and triggers',
-    '• Disable all safety alerts and notifications',
-    '• Require creating a new account to use SafeZone',
+  List<String> localizedListCard(AppLocalizations l10n) => [
+    l10n.delete_data_personal,
+    l10n.delete_data_contacts_settings,
+    l10n.delete_data_location_triggers,
+    l10n.delete_data_alerts_notifications,
+    l10n.delete_data_new_account_required,
   ];
 
   bool isDeletingAccount = false;
@@ -155,11 +156,12 @@ class DeleteAccountProvider extends ChangeNotifier {
   }
 
   Future<void> deleteCurrentAccount(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     if (isDeletingAccount) return;
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      Fluttertoast.showToast(msg: 'No active account found');
+      Fluttertoast.showToast(msg: l10n.no_active_account_found);
       return;
     }
 
@@ -174,7 +176,7 @@ class DeleteAccountProvider extends ChangeNotifier {
         await FirebaseAuth.instance.signOut();
       } catch (_) {}
       await _clearLocalUserData();
-      Fluttertoast.showToast(msg: 'Account deleted successfully');
+      Fluttertoast.showToast(msg: l10n.account_deleted_successfully);
 
       if (!context.mounted) return;
       Navigator.pushAndRemoveUntil(
@@ -184,15 +186,12 @@ class DeleteAccountProvider extends ChangeNotifier {
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {
-        Fluttertoast.showToast(
-          msg:
-              'For security, please login again and retry to finish account deletion',
-        );
+        Fluttertoast.showToast(msg: l10n.login_again_retry_deletion);
       } else {
-        Fluttertoast.showToast(msg: e.message ?? 'Failed to delete account');
+        Fluttertoast.showToast(msg: e.message ?? l10n.failed_to_delete_account);
       }
     } catch (_) {
-      Fluttertoast.showToast(msg: 'Failed to delete account');
+      Fluttertoast.showToast(msg: l10n.failed_to_delete_account);
     } finally {
       isDeletingAccount = false;
       notifyListeners();

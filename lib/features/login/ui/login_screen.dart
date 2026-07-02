@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_zone/core/aspict/app_aspict.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/forget_password/ui/forget_password_screen.dart';
 import 'package:safe_zone/features/login/logic/login_provider.dart';
@@ -13,22 +14,22 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return ChangeNotifierProvider(
       create: (context) => LoginProvider(),
       child: Scaffold(
-        appBar: AppBar(title: Text('Log in'), centerTitle: true),
+        appBar: AppBar(title: Text(l10n.login_title), centerTitle: true),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: Column(
             spacing: 20,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // SizedBox(height: screenHeight * 0.15, width: screenWidth),
               Image.asset(
-                'assests/images/photo_2026-03-24_21-13-29_copy.jpg',
-                height: screenHeight * 0.15,
+                'assests/images/safezoneupdatedicon.png',
+                height: 150,
               ),
-
               Consumer<LoginProvider>(
                 builder: (context, provider, child) {
                   return Form(
@@ -38,18 +39,18 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         CustomTextField(
                           controller: provider.emailController,
-                          text: 'Email',
+                          text: l10n.email,
                           prefixIcon: Icon(Icons.email_outlined),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
+                              return l10n.please_enter_your_email;
                             }
                             return null;
                           },
                         ),
                         CustomTextField(
                           controller: provider.passwordController,
-                          text: 'Password',
+                          text: l10n.password,
                           prefixIcon: Icon(Icons.lock_outline),
                           suffixIcon:
                               provider.isvisible
@@ -68,7 +69,7 @@ class LoginScreen extends StatelessWidget {
                           obscureText: provider.isvisible,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your Password';
+                              return l10n.please_enter_your_password;
                             }
                             return null;
                           },
@@ -83,7 +84,7 @@ class LoginScreen extends StatelessWidget {
                             );
                           },
                           child: Text(
-                            'Forget Password?',
+                            l10n.forget_password_question,
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
@@ -100,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                                   provider.login(context);
                                 },
                                 child: Text(
-                                  'Log in',
+                                  l10n.login_title,
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
@@ -118,7 +119,7 @@ class LoginScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 5.0,
                               ),
-                              child: Text('or'),
+                              child: Text(l10n.or),
                             ),
                             SizedBox(
                               width: screenWidth * 0.4,
@@ -148,7 +149,7 @@ class LoginScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset('assests/icons/google.svg'),
-                                Text('Continue with Google'),
+                                Text(l10n.continue_with_google),
                               ],
                             ),
                           ),
@@ -158,7 +159,7 @@ class LoginScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Don't have an account?",
+                              l10n.dont_have_an_account,
                               style: TextStyle(color: Colors.blue),
                             ),
                             TextButton(
@@ -171,7 +172,7 @@ class LoginScreen extends StatelessWidget {
                                 );
                               },
                               child: Text(
-                                'Sign Up',
+                                l10n.sign_up,
                                 style: TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold,

@@ -33,13 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   children: [
                     Image.asset(provider.screens[index].image, height: 200),
                     SizedBox(height: 20),
-                    // Text(
-                    //   provider.screens[index].title,
-                    //   style: TextStyle(
-                    //     fontSize: 20,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
+
                     SizedBox(height: 10),
                     Text(
                       provider.screens[index].subtitle,
@@ -73,7 +67,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
           SizedBox(height: 20),
 
-          /// Skip Button
           TextButton(
             onPressed: () {
               Navigator.push(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/main.dart';
 
@@ -24,6 +25,8 @@ class _AfterSosState extends State<AfterSos> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -51,12 +54,13 @@ class _AfterSosState extends State<AfterSos> {
                 ),
               ),
               Text(
-                'SOS Alert Sent',
+                l10n.sos_alert_sent,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              Text('Your location and voice snippet have been shared'),
+              Text(l10n.location_voice_shared),
               Consumer<GirdServicesData>(
                 builder: (context, provider, _) {
+                  final afterSos = provider.localizedAfterSos(l10n);
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -77,13 +81,13 @@ class _AfterSosState extends State<AfterSos> {
                                 spacing: 10,
                                 children: [
                                   Text(
-                                    provider.afterSos[index].title,
+                                    afterSos[index].title,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
-                                    provider.afterSos[index].subtitle,
+                                    afterSos[index].subtitle,
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                 ],
@@ -93,12 +97,12 @@ class _AfterSosState extends State<AfterSos> {
                         ),
                       );
                     },
-                    itemCount: provider.afterSos.length,
+                    itemCount: afterSos.length,
                   );
                 },
               ),
               Text(
-                'Your SOS is now active. Your contacts can see your live location and listen to your voice note.',
+                l10n.sos_active_message,
               ),
             ],
           ),

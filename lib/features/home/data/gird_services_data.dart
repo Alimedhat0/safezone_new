@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,52 +9,49 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:safe_zone/core/services/location_permission_service.dart';
 import 'package:safe_zone/features/home/models/after_sos_model.dart';
 import 'package:safe_zone/features/home/models/grid_services_model.dart';
 import 'package:safe_zone/features/notification/logic/notification_provider.dart';
-import 'package:safe_zone/features/sos/ui/sos_screen.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GirdServicesData extends ChangeNotifier {
-  List<GridServicesModel> gridServicesModel = [
+  List<GridServicesModel> localizedGridServices(AppLocalizations l10n) => [
     GridServicesModel(
       image: 'assests/svgs/share.svg',
-      title: 'Share location',
-      subTitle: 'send your location to contacts.',
+      title: l10n.share_location,
+      subTitle: l10n.send_your_location_to_contacts,
     ),
     GridServicesModel(
       image: 'assests/svgs/map_pin.svg',
-      title: 'Live Tracking',
-      subTitle: 'Last updated: Just now',
+      title: l10n.live_tracking,
+      subTitle: l10n.last_updated_just_now,
     ),
     GridServicesModel(
       image: 'assests/svgs/vector.svg',
-      title: 'SMS message',
-      subTitle: 'send  a message to the police',
+      title: l10n.sms_message,
+      subTitle: l10n.send_message_to_police,
     ),
     GridServicesModel(
       image: 'assests/svgs/vector2.svg',
-      title: 'Emergency Call',
-      subTitle: 'call emergency services directly',
+      title: l10n.emergency_call,
+      subTitle: l10n.call_emergency_services_directly,
     ),
   ];
 
-  Future<void> locationPer() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      print('per denid');
-      permission = await Geolocator.requestPermission();
-    }
-    if (permission == LocationPermission.deniedForever) {
-      openAppSettings();
-    }
+  Future<bool> locationPer() async {
+    return LocationPermissionService.ensurePermission();
   }
 
   String? location;
   String? locationName;
   Future<void> getCurrentLocation() async {
     try {
+      final hasPermission = await locationPer();
+      if (!hasPermission) return;
+
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
@@ -84,7 +82,6 @@ class GirdServicesData extends ChangeNotifier {
 
   Future<void> shareLocation() async {
     try {
-      await locationPer();
       await getCurrentLocation();
       if (location != null) {
         await Share.share(
@@ -102,27 +99,22 @@ class GirdServicesData extends ChangeNotifier {
   List<LatLng> path = [];
 
   Future<void> startLiveTracking() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      openAppSettings();
+    final hasPermission = await locationPer();
+    if (!hasPermission) {
       return;
     }
+
+    if (positionStream != null) return;
+
     positionStream = Geolocator.getPositionStream(
       locationSettings: LocationSettings(
         accuracy: LocationAccuracy.best,
         distanceFilter: 1,
       ),
     ).listen((Position position) {
-      // currentLatLng = LatLng(pos.latitude, pos.longitude);
       currentLatLng = LatLng(position.latitude, position.longitude);
       notifyListeners();
       path.add(currentLatLng!);
-      // print('Your Location: $currentLatLng');
     });
     notifyListeners();
   }
@@ -138,8 +130,6 @@ class GirdServicesData extends ChangeNotifier {
   void naviagteTo(BuildContext context, Widget screen) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
-
-  //SoS Functions
 
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   bool _isInit = false;
@@ -163,12 +153,7 @@ class GirdServicesData extends ChangeNotifier {
     final dir = await getTemporaryDirectory();
     final path = '${dir.path}/sos.m4a';
 
-    await _recorder.startRecorder(
-      toFile: path,
-      codec: Codec.aacMP4,
-      // sampleRate: 44100,
-      // numChannels: 1,
-    );
+    await _recorder.startRecorder(toFile: path, codec: Codec.aacMP4);
 
     await Future.delayed(const Duration(seconds: 11));
 
@@ -198,7 +183,6 @@ class GirdServicesData extends ChangeNotifier {
     required String audioPath,
     required double lat,
     required double lon,
-    // required String uid,
   }) async {
     final uid = await getStoredUid();
     if (uid == null) {
@@ -206,7 +190,8 @@ class GirdServicesData extends ChangeNotifier {
       return;
     }
 
-    final uri = Uri.parse("http://192.168.1.7:3000/api/sos");
+    final baseUrl = dotenv.env['SOS_API_BASE_URL'] ?? "http://10.0.2.2:3000";
+    final uri = Uri.parse("$baseUrl/api/sos");
 
     var request = http.MultipartRequest("POST", uri);
 
@@ -230,7 +215,8 @@ class GirdServicesData extends ChangeNotifier {
     await init();
     if (!_isInit) return;
 
-    await locationPer();
+    final hasPermission = await locationPer();
+    if (!hasPermission) return;
 
     final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.best,
@@ -251,20 +237,24 @@ class GirdServicesData extends ChangeNotifier {
     print('sos sendby speech');
   }
 
-  Future<void> cancelSOS() async {}
+  Future<void> cancelSOS() async {
+    stopTracking();
+    currentLatLng = null;
+    await _recorder.stopRecorder();
+  }
 
-  List<AfterSosModel> afterSos = [
+  List<AfterSosModel> localizedAfterSos(AppLocalizations l10n) => [
     AfterSosModel(
-      title: 'Emergency contacts notified',
-      subtitle: 'contacts received your alert',
+      title: l10n.emergency_contacts_notified,
+      subtitle: l10n.contacts_received_alert,
     ),
     AfterSosModel(
-      title: 'Live location sharing active',
-      subtitle: 'Updates every 30 seconds',
+      title: l10n.live_location_sharing_active,
+      subtitle: l10n.updates_every_30_seconds,
     ),
     AfterSosModel(
-      title: 'Voice note shared',
-      subtitle: '10 second recording sent',
+      title: l10n.voice_note_shared,
+      subtitle: l10n.ten_second_recording_sent,
     ),
   ];
 }

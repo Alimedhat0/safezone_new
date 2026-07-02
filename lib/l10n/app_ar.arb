@@ -89,6 +89,42 @@
   "help_and_support": "المساعدة والدعم",
   "log_out": "تسجيل الخروج",
   "delete_account": "حذف الحساب",
+  "confirm_log_out_message": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "please_enable_location_services": "يرجى تفعيل خدمات الموقع",
+  "location_permission_disabled_from_settings": "إذن الموقع معطل من إعدادات التطبيق",
+  "location_permission_denied": "تم رفض إذن الموقع",
+  "disable_permission_from_app_settings": "عطّل إذن {permission} من إعدادات التطبيق",
+  "@disable_permission_from_app_settings": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_disabled_from_app_settings": "إذن {permission} معطل من إعدادات التطبيق",
+  "@permission_disabled_from_app_settings": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_denied": "تم رفض إذن {permission}",
+  "@permission_denied": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_notification": "الإشعارات",
+  "permission_location": "الموقع",
+  "permission_camera": "الكاميرا",
+  "permission_microphone": "الميكروفون",
+  "no_active_account_found": "لا يوجد حساب نشط",
+  "account_deleted_successfully": "تم حذف الحساب بنجاح",
+  "login_again_before_deleting_account": "لأسباب أمنية، يرجى تسجيل الدخول مرة أخرى قبل حذف الحساب",
+  "failed_to_delete_account": "فشل حذف الحساب",
   "share_location": "مشاركة الموقع",
   "send_your_location_to_contacts": "أرسل موقعك إلى جهات الاتصال.",
   "live_tracking": "التتبع المباشر",
@@ -97,7 +133,7 @@
   "send_message_to_police": "أرسل رسالة إلى الشرطة",
   "emergency_call": "مكالمة طوارئ",
   "call_emergency_services_directly": "اتصل بخدمات الطوارئ مباشرة",
-  "contacts": "جهات الاتصال",
+  "contacts": "جهات اتصالي",
   "home_no_contacts": "لا توجد جهات اتصال {count}",
   "@home_no_contacts": {
     "placeholders": {
@@ -170,5 +206,156 @@
   "map_style_hybrid_ar": "هجينة",
   "map_style_satellite_ar": "قمر صناعي",
   "map_style_streets_arabic_ar": "شوارع عربية",
-  "map_style_topo_ar": "تضاريس"
+  "map_style_topo_ar": "تضاريس",
+  "forget_password_question": "نسيت كلمة المرور؟",
+  "login_successfully": "تم تسجيل الدخول بنجاح",
+  "registered_successfully": "تم إنشاء الحساب بنجاح",
+  "an_error_occurred": "حدث خطأ",
+  "password_reset_link_sent": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+  "error_occurred": "حدث خطأ",
+  "password_updated_successfully": "تم تحديث كلمة المرور بنجاح",
+  "verification_email_sent": "تم إرسال رسالة التحقق إلى {email}",
+  "@verification_email_sent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "firebase_error": "خطأ في Firebase",
+  "keyword_you_will_say": "الكلمة التي ستنطقها",
+  "keyword_example": "مثال: ساعدني",
+  "saving": "جارٍ الحفظ...",
+  "tap_to_save_keyword": "اضغط لحفظ الكلمة السرية",
+  "keyword_label": "الكلمة: {keyword}",
+  "@keyword_label": {
+    "placeholders": {
+      "keyword": {
+        "type": "String"
+      }
+    }
+  },
+  "saved_successfully": "تم الحفظ بنجاح",
+  "please_wait": "يرجى الانتظار...",
+  "stop_background_listening": "إيقاف الاستماع في الخلفية",
+  "start_background_listening": "بدء الاستماع في الخلفية",
+  "please_enter_keyword_first": "يرجى إدخال الكلمة السرية أولًا",
+  "failed_to_save_keyword": "فشل حفظ الكلمة السرية",
+  "safety_guide": "دليل السلامة",
+  "walk_in_instincts": "سر في أماكن مألوفة",
+  "keep_your_safe_spot": "احفظ مكانًا آمنًا قريبًا منك",
+  "carry_flashlight_at_night": "احمل مصباحًا في الليل",
+  "share_your_plans_with_family": "شارك خططك مع عائلتك",
+  "use_public_transportation": "استخدم وسائل النقل العامة",
+  "keep_your_phone_charged": "حافظ على شحن هاتفك",
+  "avoid_physical_confrontations": "تجنب المواجهات الجسدية",
+  "say_no_excessive_drinks": "تجنب الإفراط في المشروبات",
+  "safezone": "SafeZone",
+  "about_description": "يوفر دعمًا فوريًا في حالات الطوارئ، ومشاركة الموقع المباشر، وتنبيهات لجهات الاتصال الموثوقة للحفاظ على سلامتك.",
+  "our_mission": "مهمتنا",
+  "mission_description": "يهدف التطبيق إلى الحفاظ على سلامة المستخدمين وتوفير مساعدة سريعة في المواقف الخطرة أو غير المؤكدة.",
+  "how_safezone_helps_you": "كيف يساعدك SafeZone",
+  "about_sos_alert": "إرسال تنبيه استغاثة فورًا",
+  "about_share_live_location": "مشاركة الموقع المباشر مع جهات الاتصال الموثوقة",
+  "about_multiple_triggers": "استخدام عدة وسائل للطوارئ مثل الضغط أو الهز أو الكلمة الصوتية",
+  "about_notify_emergency_services": "إخطار خدمات الطوارئ تلقائيًا",
+  "search_for_question": "ابحث عن سؤال..",
+  "faq_question_emergency_trigger": "كيف تعمل وسيلة تفعيل الطوارئ؟",
+  "faq_answer_emergency_trigger": "يمكن تفعيل الطوارئ بعدة طرق: الضغط على زر التشغيل 3 مرات، أو هز الهاتف بقوة، أو استخدام كلمة صوتية. بعد التفعيل، سيتم إخطار جهات الاتصال الموثوقة فورًا مع موقعك.",
+  "faq_question_location_shared": "هل تتم مشاركة موقعي طوال الوقت؟",
+  "faq_answer_location_shared": "لا، تتم مشاركة موقعك فقط عند تفعيل تنبيه طوارئ أو عند اختيار مشاركة موقعك المباشر مع جهات الاتصال الموثوقة. يحترم SafeZone خصوصيتك ولا يستخدم الموقع إلا عند الحاجة.",
+  "faq_question_change_contacts": "كيف أغير جهات اتصال الطوارئ؟",
+  "faq_answer_change_contacts": "اذهب إلى الإعدادات ثم اضغط على جهات اتصال الطوارئ. يمكنك إضافة أو حذف أو تعديل جهات الاتصال من هناك. نوصي بوجود 3 جهات موثوقة على الأقل.",
+  "faq_question_permissions": "ما الأذونات التي يحتاجها SafeZone؟",
+  "faq_answer_permissions": "يحتاج SafeZone إلى إذن الموقع لإرسال تنبيهات دقيقة، وإذن الميكروفون للتفعيل الصوتي، وإذن الإشعارات لتنبيهك. تُستخدم كل الأذونات فقط من أجل سلامتك.",
+  "faq_question_without_internet": "هل يمكن استخدام SafeZone بدون إنترنت؟",
+  "faq_answer_without_internet": "بعض الميزات مثل رسائل SMS قد تعمل دون اتصال، لكن معظم الميزات مثل مشاركة الموقع والتحديثات اللحظية تحتاج إلى اتصال بالإنترنت للحصول على أفضل أداء.",
+  "faq_question_information_secure": "هل معلوماتي الشخصية آمنة؟",
+  "faq_answer_information_secure": "نعم، يستخدم SafeZone تخزينًا آمنًا لبياناتك الشخصية ولا يشاركها مع أطراف خارجية.",
+  "faq_question_battery_usage": "ما مقدار استهلاك SafeZone للبطارية؟",
+  "faq_answer_battery_usage": "تم تحسين SafeZone لاستهلاك أقل قدر ممكن من البطارية. يستخدم تتبع الخلفية GPS بكفاءة، ولا يصبح التطبيق نشطًا إلا عند تفعيل الطوارئ أو استخدام الميزات.",
+  "final_warning": "تحذير أخير",
+  "delete_account_warning": "هذه فرصتك الأخيرة للإلغاء. بمجرد التأكيد، سيتم حذف حسابك نهائيًا.",
+  "delete_account_data_intro": "سيتم حذف البيانات التالية نهائيًا:",
+  "delete_data_personal": "• حذف جميع بياناتك الشخصية نهائيًا",
+  "delete_data_contacts_settings": "• إزالة جميع جهات اتصال الطوارئ والإعدادات",
+  "delete_data_location_triggers": "• حذف سجل الموقع ووسائل التفعيل",
+  "delete_data_alerts_notifications": "• تعطيل جميع تنبيهات السلامة والإشعارات",
+  "delete_data_new_account_required": "• ستحتاج إلى إنشاء حساب جديد لاستخدام SafeZone",
+  "this_action": "هذا الإجراء ",
+  "cannot_be_undone": "لا يمكن التراجع عنه",
+  "deleting_account": "جارٍ حذف الحساب...",
+  "yes_delete_account_permanently": "نعم، احذف حسابي نهائيًا",
+  "login_again_retry_deletion": "لأسباب أمنية، يرجى تسجيل الدخول مرة أخرى ثم إعادة المحاولة لإكمال حذف الحساب",
+  "report_problem_description": "أخبرنا بما حدث حتى نتمكن من مساعدتك في إصلاحه.",
+  "problem_category": "تصنيف المشكلة",
+  "describe_issue": "صف المشكلة...",
+  "report_sent": "تم إرسال البلاغ",
+  "error": "خطأ",
+  "category_app_not_working": "التطبيق لا يعمل",
+  "category_location_issue": "مشكلة في الموقع",
+  "category_trigger_not_responding": "وسيلة التفعيل لا تستجيب",
+  "category_notification_problem": "مشكلة في الإشعارات",
+  "category_other": "أخرى",
+  "fill_all_fields": "املأ جميع الحقول",
+  "are_you_in_danger": "هل أنت في خطر؟",
+  "confirm_sending_sos_alert_now": "أكد إرسال تنبيه الاستغاثة الآن",
+  "confirmed": "تم التأكيد",
+  "cancelled": "تم الإلغاء",
+  "confirm_sos": "تأكيد الاستغاثة",
+  "sos_alert_sent": "تم إرسال تنبيه الاستغاثة",
+  "location_voice_shared": "تمت مشاركة موقعك والمقطع الصوتي",
+  "sos_active_message": "الاستغاثة نشطة الآن. يمكن لجهات اتصالك رؤية موقعك المباشر والاستماع إلى ملاحظتك الصوتية.",
+  "emergency_contacts_notified": "تم إخطار جهات اتصال الطوارئ",
+  "contacts_received_alert": "استلمت جهات الاتصال التنبيه",
+  "live_location_sharing_active": "مشاركة الموقع المباشر نشطة",
+  "updates_every_30_seconds": "تحديث كل 30 ثانية",
+  "voice_note_shared": "تمت مشاركة الملاحظة الصوتية",
+  "ten_second_recording_sent": "تم إرسال تسجيل مدته 10 ثوانٍ",
+  "english": "الإنجليزية",
+  "arabic": "العربية",
+  "light_mode": "الوضع الفاتح",
+  "dark_mode": "الوضع الداكن",
+  "skip": "تخطي",
+  "stay_safe_anywhere": "ابق آمنًا في أي مكان\nسلامتك هي أولويتنا",
+  "send_alert": "إرسال تنبيه",
+  "send_alert_onboarding": "أرسل تنبيهًا إلى عائلتك\nإذا كنت بحاجة إلى مساعدة.",
+  "share_location_onboarding": "سنشارك موقعك\nمع جهات الاتصال الموثوقة.",
+  "test_notification": "اختبار الإشعار",
+  "no_notifications": "لا توجد إشعارات",
+  "sos_alert_notification_title": "تنبيه استغاثة",
+  "emergency_triggered": "تم تفعيل الطوارئ!",
+  "someone": "شخص ما",
+  "needs_help_location": "{name} يحتاج إلى مساعدة. الموقع: {location}",
+  "@needs_help_location": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "are_you_safe": "هل أنت آمن؟",
+  "scheduled_safety_check": "هل أنت بخير؟ هل تحتاج إلى مساعدة؟",
+  "shake_trigger_disabled": "تفعيل الهز غير مفعل",
+  "power_button_trigger_disabled": "تفعيل زر التشغيل غير مفعل",
+  "trigger_executed": "تم تنفيذ تفعيل {source}",
+  "@trigger_executed": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "failed_to_execute_trigger": "فشل تنفيذ تفعيل {source}",
+  "@failed_to_execute_trigger": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "enable_at_least_one_trigger_first": "فعّل وسيلة واحدة على الأقل أولًا"
 }

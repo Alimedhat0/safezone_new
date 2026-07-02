@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/edit_profile/logic/edit_profile_provider.dart';
 import 'package:safe_zone/features/edit_profile/ui/edit_profile_screen.dart';
@@ -13,6 +14,8 @@ class PersonalInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final homeProvider = context.read<HomeProvider>();
       final personalProvider = context.read<PersonalInfoProvider>();
@@ -23,7 +26,7 @@ class PersonalInfoScreen extends StatelessWidget {
     final personalProvider = context.read<PersonalInfoProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Personal Information')),
+      appBar: AppBar(title: Text(l10n.personal_information)),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -55,7 +58,7 @@ class PersonalInfoScreen extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'Change Photo',
+                  l10n.change_photo,
                   style: TextStyle(color: Colors.blue),
                 ),
               ),
@@ -71,18 +74,18 @@ class PersonalInfoScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             spacing: 20,
                             children: [
-                              Text('Full Name'),
+                              Text(l10n.full_name),
                               CustomTextField(
                                 controller: personalProvider.nameController,
                                 text: '',
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Enter your Name';
+                                    return l10n.enter_your_name_alt;
                                   }
                                   return null;
                                 },
                               ),
-                              Text('Phone Number'),
+                              Text(l10n.phone_number),
                               Row(
                                 children: [
                                   Container(
@@ -118,7 +121,7 @@ class PersonalInfoScreen extends StatelessWidget {
                                           personalProvider.phoneController,
                                       keyboardType: TextInputType.phone,
                                       decoration: InputDecoration(
-                                        hintText: "Phone Number",
+                                        hintText: l10n.phone_number,
                                         filled: true,
                                         fillColor: Colors.grey[200],
                                         border: OutlineInputBorder(
@@ -132,7 +135,7 @@ class PersonalInfoScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Text('Email Address'),
+                              Text(l10n.email_address),
                               Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
@@ -144,14 +147,13 @@ class PersonalInfoScreen extends StatelessWidget {
                                   readonly: true,
                                 ),
                               ),
-                              Text('Date Of Birth'),
+                              Text(l10n.date_of_birth),
                               CustomTextField(
                                 readonly: true,
                                 controller: provider.birthController,
                                 text: '',
-                                suffixIcon: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.calendar_month),
+                                suffixIcon: Icon(
+                                  Icons.calendar_month,
                                   color: Colors.grey,
                                 ),
                                 onTap: () async {
@@ -169,17 +171,19 @@ class PersonalInfoScreen extends StatelessWidget {
                                   }
                                 },
                               ),
-                              Text('Gender'),
+                              Text(l10n.gender),
                               DropdownButtonFormField<String>(
                                 value: personalProvider.gender,
-                                hint: Text('Gender'),
+                                hint: Text(l10n.gender),
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                 ),
                                 items:
-                                    personalProvider.genderList.map((gender) {
+                                    personalProvider.genderList(l10n).map((
+                                      gender,
+                                    ) {
                                       return DropdownMenuItem(
                                         value: gender,
                                         child: Text(gender),
@@ -190,7 +194,7 @@ class PersonalInfoScreen extends StatelessWidget {
                                 },
                                 validator: (value) {
                                   if (value == null) {
-                                    return 'Please select gender';
+                                    return l10n.please_select_gender;
                                   }
                                   return null;
                                 },

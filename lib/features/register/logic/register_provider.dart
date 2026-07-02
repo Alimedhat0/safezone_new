@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/notification/logic/notification_provider.dart';
 import 'package:safe_zone/features/register/model/register_model.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 import 'package:safe_zone/main.dart';
 
 class RegisterProvider extends ChangeNotifier {
@@ -18,6 +19,7 @@ class RegisterProvider extends ChangeNotifier {
 
   void register(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
     isLoading = true;
     notifyListeners();
     try {
@@ -31,13 +33,12 @@ class RegisterProvider extends ChangeNotifier {
         name: nameController.text,
         email: emailController.text,
         phone: phoneController.text,
-        // isFav: false,
       );
       await FirebaseFirestore.instance
           .collection('users')
           .doc(uid)
           .set(registerModel.toMap());
-      Fluttertoast.showToast(msg: 'Registered Successfully');
+      Fluttertoast.showToast(msg: l10n.registered_successfully);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => MainApp()),
@@ -50,9 +51,10 @@ class RegisterProvider extends ChangeNotifier {
         await NotificationProvider().saveCurrentUserFcmToken();
       }
     } on FirebaseAuthException catch (e) {
-      Fluttertoast.showToast(msg: e.message ?? 'An error occurred');
+      Fluttertoast.showToast(msg: e.message ?? l10n.an_error_occurred);
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
   }
 }

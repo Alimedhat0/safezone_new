@@ -33,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        final homePro = context.read<HomeProvider>()..getUser();
+        final l10n = context.tr;
+        final homePro = context.read<HomeProvider>();
         final grid = Provider.of<GirdServicesData>(context);
         return SizedBox(
           width: screenWidth,
@@ -50,9 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Card(
                       elevation: 6,
                       shadowColor: Theme.of(context).colorScheme.shadow,
-                      surfaceTintColor:
-                          // Theme.of(context).colorScheme.surfaceTint,
-                          Colors.white,
+                      surfaceTintColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
@@ -80,13 +79,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     builder: (context, provider, _) {
                                       if (provider.trustedContacts.isEmpty) {
                                         return Text(
-                                          'There is no contacts ${provider.trustedContacts.length}',
+                                          l10n.home_no_contacts(
+                                            provider.trustedContacts.length,
+                                          ),
                                         );
                                       } else {
                                         return ListView.builder(
                                           physics:
                                               AlwaysScrollableScrollPhysics(),
-                                          // shrinkWrap: true,
                                           scrollDirection: Axis.horizontal,
                                           itemCount:
                                               provider.trustedContacts.length,
@@ -98,6 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   provider
                                                       .trustedContacts[index]
                                                       .name,
+                                                  provider
+                                                      .trustedContacts[index]
+                                                      .phone,
                                                 ),
                                               ],
                                             );
@@ -136,13 +139,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         SizedBox(width: 10),
                         Text(
-                          'Services',
+                          l10n.nav_services,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
                     ),
                     Consumer<GirdServicesData>(
                       builder: (context, provider, _) {
+                        final gridServices = provider.localizedGridServices(
+                          l10n,
+                        );
                         return GridView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -152,9 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisSpacing: 10,
                                 crossAxisSpacing: 10,
                               ),
-                          itemCount: provider.gridServicesModel.length,
+                          itemCount: gridServices.length,
                           itemBuilder: (context, index) {
-                            final gridPro = provider.gridServicesModel[index];
+                            final gridPro = gridServices[index];
                             return InkWell(
                               borderRadius: BorderRadius.circular(20),
                               onTap: () {
@@ -239,7 +245,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onPressed: () async {
                           await grid.init();
-                          await grid.locationPer();
                           await grid.startLiveTracking();
                           Navigator.push(
                             context,
@@ -254,13 +259,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               audioPath: path,
                               lat: grid.currentLatLng!.latitude,
                               lon: grid.currentLatLng!.longitude,
-                              // uid: grid.uid,
                             );
                           } else {
                             print("Missing data ❌");
                           }
                         },
-                        child: Text('SOS', style: TextStyle(fontSize: 25)),
+                        child: Text(
+                          l10n.sos,
+                          style: TextStyle(fontSize: 25, color: Colors.white),
+                        ),
                       ),
                     ),
                   ],

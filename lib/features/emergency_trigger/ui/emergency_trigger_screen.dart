@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_zone/core/aspict/app_aspict.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/emergency_trigger/logic/emegency_trigger_provider.dart';
 import 'package:safe_zone/features/voice_activation/ui/voice_activation_screen.dart';
 
@@ -9,17 +10,19 @@ class EmergencyTriggerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return ChangeNotifierProvider(
       create: (context) => EmegencyTriggerProvider(),
       child: Scaffold(
-        appBar: AppBar(title: Text('Emergency Trigger'), centerTitle: true),
+        appBar: AppBar(title: Text(l10n.emergency_trigger), centerTitle: true),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Choose Your Emergency Trigger',
+                l10n.choose_your_emergency_trigger,
                 style: TextStyle(fontSize: 16),
               ),
               Column(
@@ -53,14 +56,14 @@ class EmergencyTriggerScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Voice Activation',
+                                  l10n.voice_activation,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  'Trigger SOS when you say a secret keyword',
+                                  l10n.trigger_sos_secret_keyword,
                                 ),
                               ],
                             ),
@@ -95,14 +98,14 @@ class EmergencyTriggerScreen extends StatelessWidget {
                                 provider.updateSetting('shake', value);
                               },
                               title: Text(
-                                'Shake The Phone',
+                                l10n.shake_the_phone,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               subtitle: Text(
-                                'Shake your phone vigorously to send an emergency alert',
+                                l10n.shake_phone_to_send_alert,
                               ),
                               secondary: CircleAvatar(
                                 child: Icon(Icons.vibration),
@@ -118,14 +121,14 @@ class EmergencyTriggerScreen extends StatelessWidget {
                                 provider.updateSetting('power', value);
                               },
                               title: Text(
-                                'Press Power Button 3 \nTimes',
+                                l10n.press_power_button_three_times,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               subtitle: Text(
-                                'Quickly press the power button three times to trigger SOS',
+                                l10n.press_power_button_to_trigger_sos,
                               ),
                               secondary: CircleAvatar(
                                 child: Icon(Icons.phone_android_outlined),
@@ -139,9 +142,12 @@ class EmergencyTriggerScreen extends StatelessWidget {
                                 backgroundColor: Colors.blue,
                                 elevation: 4,
                               ),
-                              onPressed: () {},
+                              onPressed:
+                                  provider.isTestingTrigger
+                                      ? null
+                                      : () => provider.testDefaultTrigger(l10n),
                               child: Text(
-                                'Test Trigger',
+                                l10n.test_trigger,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -155,7 +161,7 @@ class EmergencyTriggerScreen extends StatelessWidget {
                                 color: Color(0xffD56F15),
                               ),
                               title: Text(
-                                'Use triggers carefully to avoid false alerts.',
+                                l10n.use_triggers_carefully,
                               ),
                             ),
                           ),

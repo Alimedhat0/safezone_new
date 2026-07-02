@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safe_zone/features/report_a_problem/model/report_a_problem_model.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 
 class ReportAProblemProvider extends ChangeNotifier {
   String? selectedCategory;
@@ -9,12 +10,12 @@ class ReportAProblemProvider extends ChangeNotifier {
 
   bool isLoading = false;
 
-  final List<String> categories = [
-    "App not working",
-    "Location issue",
-    "Trigger not responding",
-    "Notification problem",
-    "Other",
+  List<String> localizedCategories(AppLocalizations l10n) => [
+    l10n.category_app_not_working,
+    l10n.category_location_issue,
+    l10n.category_trigger_not_responding,
+    l10n.category_notification_problem,
+    l10n.category_other,
   ];
 
   void selectCategory(String value) {
@@ -22,9 +23,10 @@ class ReportAProblemProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submitReport() async {
+  Future<void> submitReport(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     if (selectedCategory == null || descriptionController.text.isEmpty) {
-      throw Exception("Fill all fields");
+      throw Exception(l10n.fill_all_fields);
     }
 
     isLoading = true;

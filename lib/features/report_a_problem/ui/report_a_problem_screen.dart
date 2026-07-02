@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/report_a_problem/logic/report_a_problem_provider.dart';
 
 class ReportAProblemScreen extends StatelessWidget {
@@ -8,8 +9,10 @@ class ReportAProblemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return Scaffold(
-      appBar: AppBar(title: Text("Report a Problem")),
+      appBar: AppBar(title: Text(l10n.report_a_problem)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Consumer<ReportAProblemProvider>(
@@ -17,15 +20,15 @@ class ReportAProblemScreen extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Tell us what went wrong so we can help fix it."),
+                Text(l10n.report_problem_description),
 
                 const SizedBox(height: 20),
 
-                Text("Problem Category"),
+                Text(l10n.problem_category),
 
                 const SizedBox(height: 10),
 
-                ...provider.categories.map((cat) {
+                ...provider.localizedCategories(l10n).map((cat) {
                   return Card(
                     elevation: 6,
                     shape: RoundedRectangleBorder(
@@ -45,7 +48,7 @@ class ReportAProblemScreen extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
-                Text("Description"),
+                Text(l10n.description),
 
                 const SizedBox(height: 10),
 
@@ -53,7 +56,7 @@ class ReportAProblemScreen extends StatelessWidget {
                   controller: provider.descriptionController,
                   maxLines: 5,
                   decoration: InputDecoration(
-                    hintText: "Describe the issue...",
+                    hintText: l10n.describe_issue,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -62,7 +65,6 @@ class ReportAProblemScreen extends StatelessWidget {
 
                 const Spacer(),
 
-                /// 🚀 Submit Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -74,18 +76,18 @@ class ReportAProblemScreen extends StatelessWidget {
                             ? null
                             : () async {
                               try {
-                                await provider.submitReport();
+                                await provider.submitReport(context);
 
-                                Fluttertoast.showToast(msg: 'Report Sent');
+                                Fluttertoast.showToast(msg: l10n.report_sent);
                               } catch (e) {
-                                Fluttertoast.showToast(msg: 'Error');
+                                Fluttertoast.showToast(msg: l10n.error);
                               }
                             },
                     child:
                         provider.isLoading
                             ? CircularProgressIndicator()
                             : Text(
-                              "Submit Report",
+                              l10n.submit_report,
                               style: TextStyle(color: Colors.white),
                             ),
                   ),

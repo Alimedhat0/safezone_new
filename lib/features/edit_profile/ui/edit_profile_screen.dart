@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/edit_profile/logic/edit_profile_provider.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
@@ -27,9 +28,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
     final provider = context.read<EditProfileProvider>();
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Profile'), centerTitle: true),
+      appBar: AppBar(title: Text(l10n.edit_profile), centerTitle: true),
       body: Column(
         spacing: 10,
         children: [
@@ -61,21 +63,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 CustomTextField(
                   controller: provider.nameController,
-                  text: 'Name',
+                  text: l10n.name,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Enter your Name';
+                      return l10n.enter_your_name_alt;
                     }
                     return null;
                   },
                 ),
                 CustomTextField(
                   controller: provider.phoneController,
-                  text: 'phone',
+                  text: l10n.phone,
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Enter your phone';
+                      return l10n.enter_your_phone;
                     }
                     return null;
                   },
@@ -93,7 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         provider.editProfile(context);
                       },
                       child: Text(
-                        'Save',
+                        l10n.save,
                         style: TextStyle(color: Colors.white),
                       ),
                     );

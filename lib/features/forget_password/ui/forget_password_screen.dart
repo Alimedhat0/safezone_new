@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/forget_password/logic/forget_password_provider.dart';
 
@@ -9,8 +10,10 @@ class ForgetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Forget Password')),
+      appBar: AppBar(title: Text(l10n.forget_password)),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
         child: Consumer<ForgotPasswordProvider>(
@@ -27,11 +30,11 @@ class ForgetPasswordScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Reset Your Passwprd',
+                    l10n.reset_your_password,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Enter Your email to receive a reset code.',
+                    l10n.enter_email_to_receive_reset_code,
                     style: TextStyle(color: Colors.grey),
                   ),
                   Column(
@@ -39,12 +42,12 @@ class ForgetPasswordScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Email Address',
+                        l10n.email_address,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       CustomTextField(
                         controller: provider.emailController,
-                        text: 'Enter Your email address',
+                        text: l10n.enter_your_email_address,
                         prefixIcon: Icon(Icons.email_outlined),
                       ),
                       SizedBox(
@@ -58,13 +61,13 @@ class ForgetPasswordScreen extends StatelessWidget {
                               provider.isLoading
                                   ? null
                                   : () async {
-                                    await provider.resetPassword();
+                                    await provider.resetPassword(context);
                                   },
                           child:
                               provider.isLoading
                                   ? CircularProgressIndicator()
                                   : Text(
-                                    "Send Reset Link",
+                                    l10n.send_reset_link,
                                     style: TextStyle(color: Colors.white),
                                   ),
                         ),

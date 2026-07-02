@@ -1,29 +1,33 @@
-// import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:safe_zone/core/services/location_permission_service.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:geolocator/geolocator.dart';
-// import 'package:latlong2/latlong.dart';
+class LocationProvider extends ChangeNotifier {
+  final String apiKey = dotenv.env['API_Key_Location']!;
+  final MapController mapController = MapController();
+  LatLng? currentLocation;
+  String selectedMapStyle = 'basic-v2-dark';
 
-// class LocationProvider extends ChangeNotifier {
-//   StreamSubscription<Position>? sub;
-//   LatLng? currentLatLng;
-//   List<LatLng> path = [];
+  final Map<String, String> mapStyles = {
+    'streets': 'خريطة شوارع',
+    'hybrid': 'هجينة',
+    'satellite': 'قمر صناعي',
+    'streets-ar': 'شوارع عربية',
+    'topo': 'تضاريس',
+  };
 
-//   Future<void> startTracking() async {
-//     sub = Geolocator.getPositionStream(
-//       locationSettings: const LocationSettings(
-//         accuracy: LocationAccuracy.best,
-//         distanceFilter: 1,
-//       ),
-//     ).listen((pos) {
-//       currentLatLng = LatLng(pos.latitude, pos.longitude);
-//       path.add(currentLatLng!);
-//       notifyListeners();
-//     });
-//   }
+  Future<void> getCurrentLocation() async {
+    final hasPermission = await LocationPermissionService.ensurePermission();
+    if (!hasPermission) return;
 
-//   void stopTracking() {
-//     sub?.cancel();
-//     sub = null;
-//   }
-// }
+    Position position = await Geolocator.getCurrentPosition();
+
+    currentLocation = LatLng(position.latitude, position.longitude);
+
+    mapController.move(currentLocation!, 15);
+    notifyListeners();
+  }
+}

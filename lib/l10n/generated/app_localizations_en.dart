@@ -210,7 +210,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get account => 'Account';
 
   @override
-  String get emergency_and_safety => 'Emegency & Safety';
+  String get emergency_and_safety => 'Emergency & Safety';
 
   @override
   String get trusted_contacts => 'Trusted Contacts';
@@ -276,6 +276,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete_account => 'Delete Account';
 
   @override
+  String get confirm_log_out_message => 'Are you sure you want to log out?';
+
+  @override
+  String get please_enable_location_services => 'Please enable location services';
+
+  @override
+  String get location_permission_disabled_from_settings => 'Location permission is disabled from app settings';
+
+  @override
+  String get location_permission_denied => 'Location permission denied';
+
+  @override
+  String disable_permission_from_app_settings(String permission) {
+    return 'Disable $permission permission from app settings';
+  }
+
+  @override
+  String permission_disabled_from_app_settings(String permission) {
+    return '$permission permission is disabled from app settings';
+  }
+
+  @override
+  String permission_denied(String permission) {
+    return '$permission permission denied';
+  }
+
+  @override
+  String get permission_notification => 'Notification';
+
+  @override
+  String get permission_location => 'Location';
+
+  @override
+  String get permission_camera => 'Camera';
+
+  @override
+  String get permission_microphone => 'Microphone';
+
+  @override
+  String get no_active_account_found => 'No active account found';
+
+  @override
+  String get account_deleted_successfully => 'Account deleted successfully';
+
+  @override
+  String get login_again_before_deleting_account => 'For security, please login again before deleting account';
+
+  @override
+  String get failed_to_delete_account => 'Failed to delete account';
+
+  @override
   String get share_location => 'Share location';
 
   @override
@@ -300,7 +351,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get call_emergency_services_directly => 'call emergency services directly';
 
   @override
-  String get contacts => 'Contacts';
+  String get contacts => 'My Contacts';
 
   @override
   String home_no_contacts(int count) {
@@ -501,4 +552,353 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get map_style_topo_ar => 'تضاريس';
+
+  @override
+  String get forget_password_question => 'Forget Password?';
+
+  @override
+  String get login_successfully => 'Login Successfully';
+
+  @override
+  String get registered_successfully => 'Registered Successfully';
+
+  @override
+  String get an_error_occurred => 'An error occurred';
+
+  @override
+  String get password_reset_link_sent => 'Password reset link sent to your email';
+
+  @override
+  String get error_occurred => 'Error occurred';
+
+  @override
+  String get password_updated_successfully => 'Password updated successfully';
+
+  @override
+  String verification_email_sent(String email) {
+    return 'Verification email sent to $email';
+  }
+
+  @override
+  String get firebase_error => 'Firebase error';
+
+  @override
+  String get keyword_you_will_say => 'Keyword you will say';
+
+  @override
+  String get keyword_example => 'ex: help me';
+
+  @override
+  String get saving => 'Saving...';
+
+  @override
+  String get tap_to_save_keyword => 'Tap to Save Keyword';
+
+  @override
+  String keyword_label(String keyword) {
+    return 'Keyword: $keyword';
+  }
+
+  @override
+  String get saved_successfully => 'Saved Successfully';
+
+  @override
+  String get please_wait => 'Please wait...';
+
+  @override
+  String get stop_background_listening => 'Stop Background Listening';
+
+  @override
+  String get start_background_listening => 'Start Background Listening';
+
+  @override
+  String get please_enter_keyword_first => 'Please enter a keyword first';
+
+  @override
+  String get failed_to_save_keyword => 'Failed to save keyword';
+
+  @override
+  String get safety_guide => 'Safety Guide';
+
+  @override
+  String get walk_in_instincts => 'Walk in familiar areas';
+
+  @override
+  String get keep_your_safe_spot => 'Keep your safe spot';
+
+  @override
+  String get carry_flashlight_at_night => 'Carry a flashlight at night';
+
+  @override
+  String get share_your_plans_with_family => 'Share your plans with family';
+
+  @override
+  String get use_public_transportation => 'Use public transportation';
+
+  @override
+  String get keep_your_phone_charged => 'Keep your phone charged';
+
+  @override
+  String get avoid_physical_confrontations => 'Avoid physical confrontations';
+
+  @override
+  String get say_no_excessive_drinks => 'Avoid excessive drinks';
+
+  @override
+  String get safezone => 'SafeZone';
+
+  @override
+  String get about_description => 'Providing instant emergency support, live location sharing, and trusted contact alerts to keep you safe.';
+
+  @override
+  String get our_mission => 'Our Mission';
+
+  @override
+  String get mission_description => 'The app aims to keep users safe and provide quick help in dangerous or uncertain situations.';
+
+  @override
+  String get how_safezone_helps_you => 'How SafeZone Helps You';
+
+  @override
+  String get about_sos_alert => 'Send SOS alert instantly';
+
+  @override
+  String get about_share_live_location => 'Share live location with trusted contacts';
+
+  @override
+  String get about_multiple_triggers => 'Use multiple emergency triggers (press, shake, voice keyword)';
+
+  @override
+  String get about_notify_emergency_services => 'Automatically notify emergency services';
+
+  @override
+  String get search_for_question => 'Search for a question..';
+
+  @override
+  String get faq_question_emergency_trigger => 'How does the emergency trigger work?';
+
+  @override
+  String get faq_answer_emergency_trigger => 'The emergency trigger can be activated in multiple ways: pressing the power button 3 times, shaking your phone vigorously, or using a voice keyword. Once triggered, your emergency contacts will be notified immediately with your location.';
+
+  @override
+  String get faq_question_location_shared => 'Is my location shared all the time?';
+
+  @override
+  String get faq_answer_location_shared => 'No, your location is only shared when you activate an emergency alert or if you choose to share your live location with trusted contacts. SafeZone respects your privacy and only accesses location when necessary.';
+
+  @override
+  String get faq_question_change_contacts => 'How do I change my emergency contacts?';
+
+  @override
+  String get faq_answer_change_contacts => 'Go to Settings, then tap Emergency Contacts. You can add, remove, or edit contacts from there. We recommend having at least 3 trusted contacts for emergency situations.';
+
+  @override
+  String get faq_question_permissions => 'What permissions does SafeZone need?';
+
+  @override
+  String get faq_answer_permissions => 'SafeZone requires location access to send accurate emergency alerts, microphone access for voice activation, and notification permissions to alert you. All permissions are used solely for your safety.';
+
+  @override
+  String get faq_question_without_internet => 'Can I use SafeZone without internet?';
+
+  @override
+  String get faq_answer_without_internet => 'Some features like SMS alerts can work offline, but most features including location sharing and real-time updates require an internet connection for best performance.';
+
+  @override
+  String get faq_question_information_secure => 'Is my personal information secure?';
+
+  @override
+  String get faq_answer_information_secure => 'Yes, SafeZone uses secure storage for your personal data and does not share it with third parties.';
+
+  @override
+  String get faq_question_battery_usage => 'How much battery does SafeZone use?';
+
+  @override
+  String get faq_answer_battery_usage => 'SafeZone is optimized for minimal battery usage. Background tracking uses GPS efficiently, and the app only becomes active when you trigger an emergency or actively use features.';
+
+  @override
+  String get final_warning => 'Final Warning';
+
+  @override
+  String get delete_account_warning => 'This is your last chance to cancel. Once you confirm, your account will be permanently deleted.';
+
+  @override
+  String get delete_account_data_intro => 'The following data will be permanently deleted:';
+
+  @override
+  String get delete_data_personal => '• Permanently delete all your personal data';
+
+  @override
+  String get delete_data_contacts_settings => '• Remove all emergency contacts and settings';
+
+  @override
+  String get delete_data_location_triggers => '• Delete your location history and triggers';
+
+  @override
+  String get delete_data_alerts_notifications => '• Disable all safety alerts and notifications';
+
+  @override
+  String get delete_data_new_account_required => '• Require creating a new account to use SafeZone';
+
+  @override
+  String get this_action => 'This action ';
+
+  @override
+  String get cannot_be_undone => 'cannot be undone';
+
+  @override
+  String get deleting_account => 'Deleting Account...';
+
+  @override
+  String get yes_delete_account_permanently => 'Yes, Delete My Account Permanently';
+
+  @override
+  String get login_again_retry_deletion => 'For security, please login again and retry to finish account deletion';
+
+  @override
+  String get report_problem_description => 'Tell us what went wrong so we can help fix it.';
+
+  @override
+  String get problem_category => 'Problem Category';
+
+  @override
+  String get describe_issue => 'Describe the issue...';
+
+  @override
+  String get report_sent => 'Report Sent';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get category_app_not_working => 'App not working';
+
+  @override
+  String get category_location_issue => 'Location issue';
+
+  @override
+  String get category_trigger_not_responding => 'Trigger not responding';
+
+  @override
+  String get category_notification_problem => 'Notification problem';
+
+  @override
+  String get category_other => 'Other';
+
+  @override
+  String get fill_all_fields => 'Fill all fields';
+
+  @override
+  String get are_you_in_danger => 'Are you in danger?';
+
+  @override
+  String get confirm_sending_sos_alert_now => 'Confirm sending SOS alert now';
+
+  @override
+  String get confirmed => 'Confirmed';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String get confirm_sos => 'Confirm SOS';
+
+  @override
+  String get sos_alert_sent => 'SOS Alert Sent';
+
+  @override
+  String get location_voice_shared => 'Your location and voice snippet have been shared';
+
+  @override
+  String get sos_active_message => 'Your SOS is now active. Your contacts can see your live location and listen to your voice note.';
+
+  @override
+  String get emergency_contacts_notified => 'Emergency contacts notified';
+
+  @override
+  String get contacts_received_alert => 'Contacts received your alert';
+
+  @override
+  String get live_location_sharing_active => 'Live location sharing active';
+
+  @override
+  String get updates_every_30_seconds => 'Updates every 30 seconds';
+
+  @override
+  String get voice_note_shared => 'Voice note shared';
+
+  @override
+  String get ten_second_recording_sent => '10 second recording sent';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get arabic => 'Arabic';
+
+  @override
+  String get light_mode => 'Light Mode';
+
+  @override
+  String get dark_mode => 'Dark Mode';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get stay_safe_anywhere => 'Stay safe anywhere\nYour safety is our priority';
+
+  @override
+  String get send_alert => 'Send an alert';
+
+  @override
+  String get send_alert_onboarding => 'Send an alert to your\nfamily if you need help.';
+
+  @override
+  String get share_location_onboarding => 'We will share your location\nwith trusted contacts.';
+
+  @override
+  String get test_notification => 'Test Notification';
+
+  @override
+  String get no_notifications => 'No notifications';
+
+  @override
+  String get sos_alert_notification_title => 'SOS Alert';
+
+  @override
+  String get emergency_triggered => 'Emergency triggered!';
+
+  @override
+  String get someone => 'Someone';
+
+  @override
+  String needs_help_location(String name, String location) {
+    return '$name needs help. Location: $location';
+  }
+
+  @override
+  String get are_you_safe => 'Are you safe?';
+
+  @override
+  String get scheduled_safety_check => 'Are you okay? Do you need help?';
+
+  @override
+  String get shake_trigger_disabled => 'Shake trigger is disabled';
+
+  @override
+  String get power_button_trigger_disabled => 'Power button trigger is disabled';
+
+  @override
+  String trigger_executed(String source) {
+    return '$source trigger executed';
+  }
+
+  @override
+  String failed_to_execute_trigger(String source) {
+    return 'Failed to execute $source trigger';
+  }
+
+  @override
+  String get enable_at_least_one_trigger_first => 'Enable at least one trigger first';
 }

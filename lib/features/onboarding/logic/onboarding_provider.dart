@@ -5,7 +5,6 @@ class OnboardingProvider extends ChangeNotifier {
   List<OnboardingModel> screens = [
     OnboardingModel(
       image: "assests/images/onboarding1.png",
-      // title: "Stay Safe any where",
       subtitle: "Stay Safe any where\n Your safety is our priority",
     ),
     OnboardingModel(

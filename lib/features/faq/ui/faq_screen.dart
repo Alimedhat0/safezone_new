@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/faq/logic/faq_provider.dart';
 
 class FaqScreen extends StatelessWidget {
@@ -7,8 +8,10 @@ class FaqScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return Scaffold(
-      appBar: AppBar(title: Text("FAQ"), centerTitle: true),
+      appBar: AppBar(title: Text(l10n.faq), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -17,7 +20,7 @@ class FaqScreen extends StatelessWidget {
               builder: (context, provider, _) {
                 return TextField(
                   decoration: InputDecoration(
-                    hintText: "Search for a question..",
+                    hintText: l10n.search_for_question,
                     prefixIcon: Icon(Icons.search),
                     filled: true,
                     border: OutlineInputBorder(
@@ -34,7 +37,7 @@ class FaqScreen extends StatelessWidget {
             Expanded(
               child: Consumer<FaqProvider>(
                 builder: (context, provider, _) {
-                  final list = provider.filteredFaq;
+                  final list = provider.filteredFaq(l10n);
 
                   return ListView.builder(
                     itemCount: list.length,

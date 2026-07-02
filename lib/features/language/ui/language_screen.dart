@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/language/widgets/language_tile.dart';
 
@@ -8,46 +9,18 @@ class LanguageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Languages'), centerTitle: true),
+      appBar: AppBar(title: Text(l10n.languages), centerTitle: true),
       body: Consumer<HomeProvider>(
         builder: (context, provider, _) {
           return Column(
             children: [
-              // Card(
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(16),
-              //   ),
-              //   elevation: 6,
-              //   child: RadioListTile(
-              //     value: 'en',
-              //     groupValue: provider.locale.languageCode,
-              //     onChanged: (value) {
-              //       provider.changLang(value!);
-              //     },
-              //     title: Text('English', style: TextStyle(color: Colors.blue)),
-              //     subtitle: Text('English'),
-              //   ),
-              // ),
-              // Card(
-              //   elevation: 6,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(16),
-              //   ),
-              //   child: RadioListTile(
-              //     value: 'ar',
-              //     groupValue: provider.locale.languageCode,
-              //     onChanged: (value) {
-              //       provider.changLang(value!);
-              //     },
-              //     title: Text('Arabic', style: TextStyle(color: Colors.blue)),
-              //     subtitle: Text('العربية'),
-              //   ),
-              // ),
               LanguageTile(
                 value: 'en',
                 groupValue: provider.locale.languageCode,
-                title: 'English',
+                title: l10n.english,
                 subtitle: 'English',
                 onTap: () {
                   provider.changLang('en');
@@ -56,7 +29,7 @@ class LanguageScreen extends StatelessWidget {
               LanguageTile(
                 value: 'ar',
                 groupValue: provider.locale.languageCode,
-                title: 'Arabic',
+                title: l10n.arabic,
                 subtitle: 'العربية',
                 onTap: () {
                   provider.changLang('ar');

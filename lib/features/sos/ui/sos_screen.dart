@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/sos/ui/after_sos.dart';
 
@@ -25,6 +26,7 @@ class _SosScreenState extends State<SosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
     final provider = context.read<GirdServicesData>();
     return Scaffold(
       body: Padding(
@@ -46,12 +48,11 @@ class _SosScreenState extends State<SosScreen> {
               ),
               SizedBox(height: 10),
               Text(
-                'Are you in danger?',
+                l10n.are_you_in_danger,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              Text('Confirm sending SOS alert now'),
+              Text(l10n.confirm_sending_sos_alert_now),
               SizedBox(
-                // width: double.infinity,
                 child: Column(
                   spacing: 10,
                   children: [
@@ -62,10 +63,10 @@ class _SosScreenState extends State<SosScreen> {
                           backgroundColor: Colors.red,
                         ),
                         onPressed: () {
-                          Fluttertoast.showToast(msg: 'Confirmed');
+                          Fluttertoast.showToast(msg: l10n.confirmed);
                         },
                         child: Text(
-                          'Confirm SOS',
+                          l10n.confirm_sos,
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -78,11 +79,11 @@ class _SosScreenState extends State<SosScreen> {
                         ),
                         onPressed: () {
                           provider.cancelSOS();
-                          Fluttertoast.showToast(msg: 'Cancelled');
+                          Fluttertoast.showToast(msg: l10n.cancelled);
                           Navigator.pop(context);
                         },
                         child: Text(
-                          'Cancel',
+                          l10n.cancel,
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

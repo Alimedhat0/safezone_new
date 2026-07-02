@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:safe_zone/core/services/background_services.dart';
 import 'package:safe_zone/features/voice_activation/models/secret_word_model.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class VoiceActivationProvider extends ChangeNotifier {
@@ -52,13 +53,14 @@ class VoiceActivationProvider extends ChangeNotifier {
     isRecorderReady = true;
   }
 
-  Future<void> toggleKeywordRecording() async {
+  Future<void> toggleKeywordRecording(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     if (isSavingKeyword) return;
 
     if (!isRecording) {
       final keyword = keywordController.text.trim().toLowerCase();
       if (keyword.isEmpty) {
-        Fluttertoast.showToast(msg: "Please enter a keyword first");
+        Fluttertoast.showToast(msg: l10n.please_enter_keyword_first);
         return;
       }
 
@@ -75,7 +77,7 @@ class VoiceActivationProvider extends ChangeNotifier {
       final keyword =
           (_pendingKeyword ?? keywordController.text.trim().toLowerCase())
               .trim();
-      await stopRecording(keyword: keyword);
+      await stopRecording(keyword: keyword, l10n: l10n);
       _pendingKeyword = null;
     } finally {
       isSavingKeyword = false;
@@ -96,7 +98,10 @@ class VoiceActivationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String?> stopRecording({required String keyword}) async {
+  Future<String?> stopRecording({
+    required String keyword,
+    required AppLocalizations l10n,
+  }) async {
     final path = await recorder.stopRecorder();
     isRecording = false;
     if (path != null) {
@@ -111,7 +116,7 @@ class VoiceActivationProvider extends ChangeNotifier {
         keywordController.clear();
       } catch (e) {
         print("Upload error: $e");
-        Fluttertoast.showToast(msg: "Failed to save keyword");
+        Fluttertoast.showToast(msg: l10n.failed_to_save_keyword);
       }
     }
     notifyListeners();
@@ -202,15 +207,14 @@ class VoiceActivationProvider extends ChangeNotifier {
         .where('uid', isEqualTo: user.uid)
         .snapshots()
         .listen((event) {
-          // audioList.clear();
-          // audioList =
-          //     event.docs.map((e) => SecretWordModel.fromMap(e.data())).toList();
           audioList =
               event.docs
                   .map((e) => SecretWordModel.fromMap(e.data(), e.id))
                   .toList();
           audioList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          saveAndSyncVoiceKeywords(audioList.map((item) => item.keyword).toList());
+          saveAndSyncVoiceKeywords(
+            audioList.map((item) => item.keyword).toList(),
+          );
 
           notifyListeners();
         });

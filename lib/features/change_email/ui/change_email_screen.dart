@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/change_email/logic/change_email_provider.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
-import 'package:safe_zone/features/login/logic/login_provider.dart';
 
 class ChangeEmailScreen extends StatelessWidget {
   const ChangeEmailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
     final globalProvider = context.read<ChangeEmailProvider>();
     final homeProvider = context.read<HomeProvider>();
 
@@ -17,18 +18,16 @@ class ChangeEmailScreen extends StatelessWidget {
       homeProvider.getUser();
     }
     return Scaffold(
-      appBar: AppBar(title: Text('Change Email'), centerTitle: true),
+      appBar: AppBar(title: Text(l10n.change_email), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
+            Text(l10n.change_email_description),
             Text(
-              'Update your email address. We will send you a verification code to confirm the change.\nPlease check your gmail SPAM after update',
-            ),
-            Text(
-              'Current Email',
+              l10n.current_email,
               style: TextStyle(fontWeight: FontWeight.w400),
             ),
             Consumer<ChangeEmailProvider>(
@@ -43,40 +42,35 @@ class ChangeEmailScreen extends StatelessWidget {
                         controller: globalProvider.oldEmailController,
                         text: homeProvider.registerModel!.email,
                         readonly: true,
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.lock_outline),
-                          onPressed: () {
-                            // Handle suffix icon press
-                          },
-                        ),
+                        suffixIcon: Icon(Icons.lock_outline),
                       ),
                       Text(
-                        'New Email Address',
+                        l10n.new_email_address,
                         style: TextStyle(fontWeight: FontWeight.w400),
                       ),
                       CustomTextField(
                         controller: provider.newEmailController,
-                        text: 'Enter new email address',
+                        text: l10n.enter_new_email_address,
                         keyboardType: TextInputType.emailAddress,
                         prefixIcon: Icon(Icons.email),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a new email address';
+                            return l10n.please_enter_a_new_email_address;
                           }
                           return null;
                         },
                       ),
                       Text(
-                        'Confirm New Email',
+                        l10n.confirm_new_email,
                         style: TextStyle(fontWeight: FontWeight.w400),
                       ),
                       CustomTextField(
                         controller: provider.confirmEmailController,
-                        text: 'Re-enter new email address',
+                        text: l10n.reenter_new_email_address,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value != provider.newEmailController.text) {
-                            return 'Please enter a new email address';
+                            return l10n.please_enter_a_new_email_address;
                           }
                           return null;
                         },
@@ -90,23 +84,19 @@ class ChangeEmailScreen extends StatelessWidget {
                           onPressed: () {
                             if (!provider.formKey.currentState!.validate())
                               return;
-
                             showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text('Confirm Password'),
+                                  title: Text(l10n.confirm_password),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       CustomTextField(
                                         controller: provider.passwordController,
-                                        text: 'Password',
+                                        text: l10n.password,
                                         obscureText: true,
-                                        suffixIcon: IconButton(
-                                          icon: Icon(Icons.lock_outline),
-                                          onPressed: () {},
-                                        ),
+                                        suffixIcon: Icon(Icons.lock_outline),
                                       ),
                                     ],
                                   ),
@@ -117,12 +107,13 @@ class ChangeEmailScreen extends StatelessWidget {
                                         : ElevatedButton(
                                           onPressed: () async {
                                             await provider.updateEmail(
+                                              context,
                                               provider.passwordController.text,
                                             );
                                             await homeProvider.getUser();
                                             Navigator.pop(context);
                                           },
-                                          child: Text('Update'),
+                                          child: Text(l10n.update),
                                         ),
                                   ],
                                 );
@@ -130,7 +121,7 @@ class ChangeEmailScreen extends StatelessWidget {
                             );
                           },
                           child: Text(
-                            'Send Verification Code',
+                            l10n.send_verification_code,
                             style: TextStyle(color: Colors.white),
                           ),
                         ),

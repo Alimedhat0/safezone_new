@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/emergency_contacts/logic/emergency_provider.dart';
 
 class EmergencyContactScreen extends StatelessWidget {
@@ -8,21 +9,24 @@ class EmergencyContactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return ChangeNotifierProvider(
       create: (context) => EmergencyProvider(),
       child: Scaffold(
-        appBar: AppBar(title: Text('Emergency Contacts')),
+        appBar: AppBar(title: Text(l10n.emergency_contacts)),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Emergency SOS',
+                l10n.emergency_sos,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               ),
               Consumer<EmergencyProvider>(
                 builder: (context, provider, child) {
+                  final emergencyData = provider.localizedEmergencyData(l10n);
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12.0,
@@ -30,9 +34,9 @@ class EmergencyContactScreen extends StatelessWidget {
                     ),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: provider.emergencyData.length,
+                      itemCount: emergencyData.length,
                       itemBuilder: (context, index) {
-                        final emerg = provider.emergencyData[index];
+                        final emerg = emergencyData[index];
                         return Column(
                           spacing: 5,
                           children: [

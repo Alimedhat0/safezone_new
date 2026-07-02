@@ -67,7 +67,7 @@
   "view_previous_reports": "View Pervious reports",
   "view_profile": "View profile",
   "account": "Account",
-  "emergency_and_safety": "Emegency & Safety",
+  "emergency_and_safety": "Emergency & Safety",
   "trusted_contacts": "Trusted Contacts",
   "emergency_triggers": "Emergency Triggers",
   "languages": "Languages",
@@ -89,6 +89,42 @@
   "help_and_support": "Help & Support",
   "log_out": "Log Out",
   "delete_account": "Delete Account",
+  "confirm_log_out_message": "Are you sure you want to log out?",
+  "please_enable_location_services": "Please enable location services",
+  "location_permission_disabled_from_settings": "Location permission is disabled from app settings",
+  "location_permission_denied": "Location permission denied",
+  "disable_permission_from_app_settings": "Disable {permission} permission from app settings",
+  "@disable_permission_from_app_settings": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_disabled_from_app_settings": "{permission} permission is disabled from app settings",
+  "@permission_disabled_from_app_settings": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_denied": "{permission} permission denied",
+  "@permission_denied": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_notification": "Notification",
+  "permission_location": "Location",
+  "permission_camera": "Camera",
+  "permission_microphone": "Microphone",
+  "no_active_account_found": "No active account found",
+  "account_deleted_successfully": "Account deleted successfully",
+  "login_again_before_deleting_account": "For security, please login again before deleting account",
+  "failed_to_delete_account": "Failed to delete account",
   "share_location": "Share location",
   "send_your_location_to_contacts": "send your location to contacts.",
   "live_tracking": "Live Tracking",
@@ -97,7 +133,7 @@
   "send_message_to_police": "send  a message to the police",
   "emergency_call": "Emergency Call",
   "call_emergency_services_directly": "call emergency services directly",
-  "contacts": "Contacts",
+  "contacts": "My Contacts",
   "home_no_contacts": "There is no contacts {count}",
   "@home_no_contacts": {
     "placeholders": {
@@ -170,5 +206,156 @@
   "map_style_hybrid_ar": "هجينة",
   "map_style_satellite_ar": "قمر صناعي",
   "map_style_streets_arabic_ar": "شوارع عربية",
-  "map_style_topo_ar": "تضاريس"
+  "map_style_topo_ar": "تضاريس",
+  "forget_password_question": "Forget Password?",
+  "login_successfully": "Login Successfully",
+  "registered_successfully": "Registered Successfully",
+  "an_error_occurred": "An error occurred",
+  "password_reset_link_sent": "Password reset link sent to your email",
+  "error_occurred": "Error occurred",
+  "password_updated_successfully": "Password updated successfully",
+  "verification_email_sent": "Verification email sent to {email}",
+  "@verification_email_sent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "firebase_error": "Firebase error",
+  "keyword_you_will_say": "Keyword you will say",
+  "keyword_example": "ex: help me",
+  "saving": "Saving...",
+  "tap_to_save_keyword": "Tap to Save Keyword",
+  "keyword_label": "Keyword: {keyword}",
+  "@keyword_label": {
+    "placeholders": {
+      "keyword": {
+        "type": "String"
+      }
+    }
+  },
+  "saved_successfully": "Saved Successfully",
+  "please_wait": "Please wait...",
+  "stop_background_listening": "Stop Background Listening",
+  "start_background_listening": "Start Background Listening",
+  "please_enter_keyword_first": "Please enter a keyword first",
+  "failed_to_save_keyword": "Failed to save keyword",
+  "safety_guide": "Safety Guide",
+  "walk_in_instincts": "Walk in familiar areas",
+  "keep_your_safe_spot": "Keep your safe spot",
+  "carry_flashlight_at_night": "Carry a flashlight at night",
+  "share_your_plans_with_family": "Share your plans with family",
+  "use_public_transportation": "Use public transportation",
+  "keep_your_phone_charged": "Keep your phone charged",
+  "avoid_physical_confrontations": "Avoid physical confrontations",
+  "say_no_excessive_drinks": "Avoid excessive drinks",
+  "safezone": "SafeZone",
+  "about_description": "Providing instant emergency support, live location sharing, and trusted contact alerts to keep you safe.",
+  "our_mission": "Our Mission",
+  "mission_description": "The app aims to keep users safe and provide quick help in dangerous or uncertain situations.",
+  "how_safezone_helps_you": "How SafeZone Helps You",
+  "about_sos_alert": "Send SOS alert instantly",
+  "about_share_live_location": "Share live location with trusted contacts",
+  "about_multiple_triggers": "Use multiple emergency triggers (press, shake, voice keyword)",
+  "about_notify_emergency_services": "Automatically notify emergency services",
+  "search_for_question": "Search for a question..",
+  "faq_question_emergency_trigger": "How does the emergency trigger work?",
+  "faq_answer_emergency_trigger": "The emergency trigger can be activated in multiple ways: pressing the power button 3 times, shaking your phone vigorously, or using a voice keyword. Once triggered, your emergency contacts will be notified immediately with your location.",
+  "faq_question_location_shared": "Is my location shared all the time?",
+  "faq_answer_location_shared": "No, your location is only shared when you activate an emergency alert or if you choose to share your live location with trusted contacts. SafeZone respects your privacy and only accesses location when necessary.",
+  "faq_question_change_contacts": "How do I change my emergency contacts?",
+  "faq_answer_change_contacts": "Go to Settings, then tap Emergency Contacts. You can add, remove, or edit contacts from there. We recommend having at least 3 trusted contacts for emergency situations.",
+  "faq_question_permissions": "What permissions does SafeZone need?",
+  "faq_answer_permissions": "SafeZone requires location access to send accurate emergency alerts, microphone access for voice activation, and notification permissions to alert you. All permissions are used solely for your safety.",
+  "faq_question_without_internet": "Can I use SafeZone without internet?",
+  "faq_answer_without_internet": "Some features like SMS alerts can work offline, but most features including location sharing and real-time updates require an internet connection for best performance.",
+  "faq_question_information_secure": "Is my personal information secure?",
+  "faq_answer_information_secure": "Yes, SafeZone uses secure storage for your personal data and does not share it with third parties.",
+  "faq_question_battery_usage": "How much battery does SafeZone use?",
+  "faq_answer_battery_usage": "SafeZone is optimized for minimal battery usage. Background tracking uses GPS efficiently, and the app only becomes active when you trigger an emergency or actively use features.",
+  "final_warning": "Final Warning",
+  "delete_account_warning": "This is your last chance to cancel. Once you confirm, your account will be permanently deleted.",
+  "delete_account_data_intro": "The following data will be permanently deleted:",
+  "delete_data_personal": "• Permanently delete all your personal data",
+  "delete_data_contacts_settings": "• Remove all emergency contacts and settings",
+  "delete_data_location_triggers": "• Delete your location history and triggers",
+  "delete_data_alerts_notifications": "• Disable all safety alerts and notifications",
+  "delete_data_new_account_required": "• Require creating a new account to use SafeZone",
+  "this_action": "This action ",
+  "cannot_be_undone": "cannot be undone",
+  "deleting_account": "Deleting Account...",
+  "yes_delete_account_permanently": "Yes, Delete My Account Permanently",
+  "login_again_retry_deletion": "For security, please login again and retry to finish account deletion",
+  "report_problem_description": "Tell us what went wrong so we can help fix it.",
+  "problem_category": "Problem Category",
+  "describe_issue": "Describe the issue...",
+  "report_sent": "Report Sent",
+  "error": "Error",
+  "category_app_not_working": "App not working",
+  "category_location_issue": "Location issue",
+  "category_trigger_not_responding": "Trigger not responding",
+  "category_notification_problem": "Notification problem",
+  "category_other": "Other",
+  "fill_all_fields": "Fill all fields",
+  "are_you_in_danger": "Are you in danger?",
+  "confirm_sending_sos_alert_now": "Confirm sending SOS alert now",
+  "confirmed": "Confirmed",
+  "cancelled": "Cancelled",
+  "confirm_sos": "Confirm SOS",
+  "sos_alert_sent": "SOS Alert Sent",
+  "location_voice_shared": "Your location and voice snippet have been shared",
+  "sos_active_message": "Your SOS is now active. Your contacts can see your live location and listen to your voice note.",
+  "emergency_contacts_notified": "Emergency contacts notified",
+  "contacts_received_alert": "Contacts received your alert",
+  "live_location_sharing_active": "Live location sharing active",
+  "updates_every_30_seconds": "Updates every 30 seconds",
+  "voice_note_shared": "Voice note shared",
+  "ten_second_recording_sent": "10 second recording sent",
+  "english": "English",
+  "arabic": "Arabic",
+  "light_mode": "Light Mode",
+  "dark_mode": "Dark Mode",
+  "skip": "Skip",
+  "stay_safe_anywhere": "Stay safe anywhere\nYour safety is our priority",
+  "send_alert": "Send an alert",
+  "send_alert_onboarding": "Send an alert to your\nfamily if you need help.",
+  "share_location_onboarding": "We will share your location\nwith trusted contacts.",
+  "test_notification": "Test Notification",
+  "no_notifications": "No notifications",
+  "sos_alert_notification_title": "SOS Alert",
+  "emergency_triggered": "Emergency triggered!",
+  "someone": "Someone",
+  "needs_help_location": "{name} needs help. Location: {location}",
+  "@needs_help_location": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "are_you_safe": "Are you safe?",
+  "scheduled_safety_check": "Are you okay? Do you need help?",
+  "shake_trigger_disabled": "Shake trigger is disabled",
+  "power_button_trigger_disabled": "Power button trigger is disabled",
+  "trigger_executed": "{source} trigger executed",
+  "@trigger_executed": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "failed_to_execute_trigger": "Failed to execute {source} trigger",
+  "@failed_to_execute_trigger": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "enable_at_least_one_trigger_first": "Enable at least one trigger first"
 }

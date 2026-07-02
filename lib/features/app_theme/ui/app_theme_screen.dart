@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/app_theme/widgets/theme_tile.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 
@@ -8,8 +9,10 @@ class AppThemeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return Scaffold(
-      appBar: AppBar(title: Text('App Theme'), centerTitle: true),
+      appBar: AppBar(title: Text(l10n.app_theme), centerTitle: true),
       body: Column(
         children: [
           Consumer<HomeProvider>(
@@ -20,9 +23,9 @@ class AppThemeScreen extends StatelessWidget {
                     value: ThemeMode.light,
                     groupValue: provider.themeMode,
                     onChanged: (value) {
-                      provider.toggleTheme(false);
+                      provider.changeTheme(value);
                     },
-                    title: 'Light Mood',
+                    title: l10n.light_mode,
                     secondry: CircleAvatar(
                       backgroundColor: Colors.white,
                       child: Icon(Icons.light_mode, color: Colors.amber),
@@ -32,9 +35,9 @@ class AppThemeScreen extends StatelessWidget {
                     value: ThemeMode.dark,
                     groupValue: provider.themeMode,
                     onChanged: (value) {
-                      provider.toggleTheme(true);
+                      provider.changeTheme(value);
                     },
-                    title: 'Dark Mood',
+                    title: l10n.dark_mode,
                     secondry: CircleAvatar(
                       backgroundColor: Colors.black,
                       child: Icon(Icons.dark_mode, color: Colors.white),

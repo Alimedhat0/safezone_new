@@ -1,47 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:safe_zone/features/faq/models/faq_model.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 
 class FaqProvider extends ChangeNotifier {
-  List<FaqModel> faqList = [
+  List<FaqModel> localizedFaqList(AppLocalizations l10n) => [
     FaqModel(
-      question: 'How does the emergency trigger work?',
-      answer:
-          'The emergency trigger can be activated in multiple ways: pressing the power button 3 times, shaking your phone vigorously, or long-pressing the screen for 3 seconds. Once triggered, your emergencycontacts will benotified immediately with your location.',
+      question: l10n.faq_question_emergency_trigger,
+      answer: l10n.faq_answer_emergency_trigger,
     ),
     FaqModel(
-      question: 'Is my location shared all the time?',
-      answer:
-          'No, your location is only shared when you activate an emergency alert or if you choose to share your live location with trusted contacts. SafeZone respects your privacy and only accesses location when necessary.',
+      question: l10n.faq_question_location_shared,
+      answer: l10n.faq_answer_location_shared,
     ),
     FaqModel(
-      question: 'How do i change my emergency contacts',
-      answer:
-          'Go to Settings, then tap on "Emergency Contacts". You can add, remove, or edit contacts from there. We recommend having at least 3 trusted contacts for emergency situations.',
+      question: l10n.faq_question_change_contacts,
+      answer: l10n.faq_answer_change_contacts,
     ),
     FaqModel(
-      question: 'What permissions does SafeZone need?',
-      answer:
-          'SafeZone requires location access to send accurate emergency alerts, microphone access for voice activation (optional), and notification permissions to alert you. All permissions are used solely for your safety.',
+      question: l10n.faq_question_permissions,
+      answer: l10n.faq_answer_permissions,
     ),
     FaqModel(
-      question: 'Can i use SafeZone without internet?',
-      answer:
-          'Some features like SMS alerts can work offline, but most features including location sharing and real-time updates require an internet connection for best performance.',
+      question: l10n.faq_question_without_internet,
+      answer: l10n.faq_answer_without_internet,
     ),
     FaqModel(
-      question: 'Is my personal information secure?',
-      answer:
-          'Yes, SafeZone uses end-to-end encryption for all communications. Your personal data is stored securely and is never shared with third parties. We follow industry-standard security practices to protect your information.',
+      question: l10n.faq_question_information_secure,
+      answer: l10n.faq_answer_information_secure,
     ),
     FaqModel(
-      question: 'How much battery does SafeZone use?',
-      answer:
-          'SafeZone is optimized for minimal battery usage. Background location tracking uses GPS efficiently, and the app only becomes active when you trigger an emergency or actively use features.',
+      question: l10n.faq_question_battery_usage,
+      answer: l10n.faq_answer_battery_usage,
     ),
   ];
 
   String search = '';
-  List<FaqModel> get filteredFaq {
+  List<FaqModel> filteredFaq(AppLocalizations l10n) {
+    final faqList = localizedFaqList(l10n);
     if (search.isEmpty) return faqList;
 
     return faqList

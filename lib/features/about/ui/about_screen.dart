@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/about/logic/about_provider.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -8,9 +9,11 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
     final provider = context.watch<AboutProvider>();
+    final aboutList = provider.localizedAboutList(l10n);
     return Scaffold(
-      appBar: AppBar(title: Text('About'), centerTitle: true),
+      appBar: AppBar(title: Text(l10n.about), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -33,11 +36,11 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
             Text(
-              'SafeZone',
+              l10n.safezone,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             Text(
-              'Providing instant emergency support, live location sharing, and trusted contact alerts to keep you safe.',
+              l10n.about_description,
             ),
             Divider(thickness: 1),
             Column(
@@ -45,11 +48,11 @@ class AboutScreen extends StatelessWidget {
               spacing: 5,
               children: [
                 Text(
-                  'Our Mission',
+                  l10n.our_mission,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Text(
-                  'The app aims to keep users safe and provide quick help in dangerous or uncertain situations.',
+                  l10n.mission_description,
                 ),
               ],
             ),
@@ -59,7 +62,7 @@ class AboutScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'How SafeZone Helps You',
+                  l10n.how_safezone_helps_you,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 ListView.builder(
@@ -67,17 +70,17 @@ class AboutScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(provider.aboutList[index].title),
+                      title: Text(aboutList[index].title),
                       leading: CircleAvatar(
                         backgroundColor: provider.colors[index],
                         child: Icon(
-                          provider.aboutList[index].icon,
+                          aboutList[index].icon,
                           color: Colors.white,
                         ),
                       ),
                     );
                   },
-                  itemCount: provider.aboutList.length,
+                  itemCount: aboutList.length,
                 ),
               ],
             ),

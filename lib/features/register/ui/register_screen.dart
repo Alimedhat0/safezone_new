@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_zone/core/aspict/app_aspict.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/login/ui/login_screen.dart';
 import 'package:safe_zone/features/register/logic/register_provider.dart';
@@ -11,17 +12,22 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return ChangeNotifierProvider(
       create: (context) => RegisterProvider(),
       builder: (context, child) {
         final regProvider = context.read<RegisterProvider>();
         return Scaffold(
-          appBar: AppBar(title: Text('Sign Up'), centerTitle: true),
+          appBar: AppBar(title: Text(l10n.sign_up), centerTitle: true),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                SizedBox(height: screenHeight * 0.1),
+                Image.asset(
+                  'assests/images/safezoneupdatedicon.png',
+                  height: 150,
+                ),
                 Consumer<RegisterProvider>(
                   builder: (context, value, child) {
                     return Form(
@@ -36,11 +42,11 @@ class RegisterScreen extends StatelessWidget {
                             elevation: 6,
                             child: CustomTextField(
                               controller: regProvider.nameController,
-                              text: 'Full Name',
+                              text: l10n.full_name,
                               prefixIcon: Icon(Icons.person_outline),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Enter Your Name';
+                                  return l10n.enter_your_name;
                                 }
                                 return null;
                               },
@@ -48,21 +54,18 @@ class RegisterScreen extends StatelessWidget {
                           ),
                           CustomTextField(
                             controller: regProvider.emailController,
-                            text: 'Email',
+                            text: l10n.email,
                             prefixIcon: Icon(Icons.email_outlined),
                           ),
                           CustomTextField(
                             controller: regProvider.passwordController,
-                            text: 'Password',
+                            text: l10n.password,
                             prefixIcon: Icon(Icons.lock_outline),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.remove_red_eye_outlined),
-                              onPressed: () {},
-                            ),
+                            suffixIcon: Icon(Icons.remove_red_eye_outlined),
                           ),
                           CustomTextField(
                             controller: regProvider.phoneController,
-                            text: 'Phone Number',
+                            text: l10n.phone_number,
                             prefixIcon: Icon(Icons.phone),
                           ),
 
@@ -80,7 +83,7 @@ class RegisterScreen extends StatelessWidget {
                                     regProvider.register(context);
                                   },
                                   child: Text(
-                                    'Sign Up',
+                                    l10n.sign_up,
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -97,7 +100,7 @@ class RegisterScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 5.0,
                                 ),
-                                child: Text('or'),
+                                child: Text(l10n.or),
                               ),
                               SizedBox(
                                 width: screenWidth * 0.4,
@@ -114,13 +117,13 @@ class RegisterScreen extends StatelessWidget {
                                 elevation: 6,
                                 backgroundColor: Colors.white,
                               ),
-                              onPressed: () {},
+                              onPressed: null,
                               child: Row(
                                 spacing: 10,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset('assests/icons/google.svg'),
-                                  Text('Continue with Google'),
+                                  Text(l10n.continue_with_google),
                                 ],
                               ),
                             ),
@@ -129,7 +132,7 @@ class RegisterScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Don't have an account?",
+                                l10n.dont_have_an_account,
                                 style: TextStyle(color: Colors.blue),
                               ),
                               TextButton(
@@ -142,7 +145,7 @@ class RegisterScreen extends StatelessWidget {
                                   );
                                 },
                                 child: Text(
-                                  'Log In',
+                                  l10n.log_in_alt,
                                   style: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,

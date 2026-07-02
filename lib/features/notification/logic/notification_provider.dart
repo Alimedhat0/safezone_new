@@ -41,7 +41,7 @@ class NotificationProvider extends ChangeNotifier {
     }, SetOptions(merge: true));
   }
 
-  Future<void> showNotification() async {
+  Future<void> showNotification({String? title, String? body}) async {
     const androidDetails = AndroidNotificationDetails(
       'channel_id',
       'channel_name',
@@ -55,8 +55,8 @@ class NotificationProvider extends ChangeNotifier {
 
     final notif = NotificationModel(
       id: id,
-      title: 'SOS Alert 🚨',
-      body: 'Emergency triggered!',
+      title: title ?? 'SOS Alert',
+      body: body ?? 'Emergency triggered!',
       date: DateTime.now(),
     );
 
@@ -191,7 +191,7 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<void> setupNotificationChannel() async {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'speech_service', // ⚠️ لازم نفس الـ ID
+      'speech_service',
       'Speech Background Service',
       description: 'Used for background voice listening',
       importance: Importance.low,

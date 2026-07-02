@@ -18,7 +18,6 @@ class MainActivity: FlutterActivity() {
             CHANNEL
         )
 
-        // 🔥 ربطه بالـ Service
         VoiceService.channel = methodChannel
 
         methodChannel.setMethodCallHandler { call, result ->

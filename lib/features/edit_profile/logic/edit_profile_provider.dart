@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/register/model/register_model.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileProvider extends ChangeNotifier {
@@ -15,6 +16,7 @@ class EditProfileProvider extends ChangeNotifier {
   bool isLoading = false;
   Future<void> editProfile(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
     isLoading = true;
     notifyListeners();
     try {
@@ -26,10 +28,13 @@ class EditProfileProvider extends ChangeNotifier {
       await context.read<HomeProvider>().getUser();
       isLoading = false;
       notifyListeners();
-      Fluttertoast.showToast(msg: 'Profile updated successfully');
+      Fluttertoast.showToast(msg: l10n.profile_updated_successfully);
       Navigator.pop(context);
     } on FirebaseException catch (e) {
-      Fluttertoast.showToast(msg: e.message ?? 'Unknown error');
+      Fluttertoast.showToast(msg: e.message ?? l10n.unknown_error);
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 

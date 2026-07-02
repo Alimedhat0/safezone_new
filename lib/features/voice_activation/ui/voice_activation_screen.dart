@@ -73,7 +73,12 @@ class VoiceActivationScreen extends StatelessWidget {
                                     onPressed:
                                         provider.isSavingKeyword
                                             ? null
-                                            : provider.toggleKeywordRecording,
+                                            : () async {
+                                              await provider
+                                                  .toggleKeywordRecording(
+                                                    context,
+                                                  );
+                                            },
                                     child:
                                         provider.isSavingKeyword
                                             ? Text(
@@ -102,7 +107,6 @@ class VoiceActivationScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // Preview your recorded keyword
                         Consumer<VoiceActivationProvider>(
                           builder: (context, _, _) {
                             if (provider.audioList.isEmpty) {
@@ -221,7 +225,6 @@ class VoiceActivationScreen extends StatelessWidget {
                           },
                         ),
 
-                        // Detection Sensitivity
                         Text('Detection Sensitivity'),
                         DropdownButtonFormField<String>(
                           value: provider.selectedOption,
@@ -279,7 +282,7 @@ class VoiceActivationScreen extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                               ),
-                              onPressed: () {},
+                              onPressed: null,
                               child: Text(
                                 'Test Voice Trigger',
                                 style: TextStyle(color: Colors.white),

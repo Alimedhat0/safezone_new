@@ -15,8 +15,8 @@ import 'package:safe_zone/features/faq/logic/faq_provider.dart';
 import 'package:safe_zone/features/forget_password/logic/forget_password_provider.dart';
 import 'package:safe_zone/features/home/data/gird_services_data.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
+import 'package:safe_zone/features/location/logic/location_provider.dart';
 import 'package:safe_zone/features/notification/logic/notification_provider.dart';
-import 'package:safe_zone/features/notification/ui/notification_screen.dart';
 import 'package:safe_zone/features/onboarding/logic/onboarding_provider.dart';
 import 'package:safe_zone/features/personal_info/logic/personal_info_provider.dart';
 import 'package:safe_zone/features/report_a_problem/logic/report_a_problem_provider.dart';
@@ -28,7 +28,6 @@ import 'package:safe_zone/features/voice_activation/logic/voice_activation_provi
 import 'package:safe_zone/firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:safe_zone/l10n/generated/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,11 +49,8 @@ Future<void> main() async {
                   HomeProvider()
                     ..loadLocal()
                     ..loadTheme(),
-          // ..initializeService(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => GirdServicesData()..getCurrentLocation(),
-        ),
+        ChangeNotifierProvider(create: (_) => GirdServicesData()),
         ChangeNotifierProvider(create: (_) => ServicesProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
         ChangeNotifierProvider(create: (_) => EmergencyProvider()),
@@ -78,6 +74,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ReportAProblemProvider()),
         ChangeNotifierProvider(create: (_) => AboutProvider()),
         ChangeNotifierProvider(create: (_) => DeleteAccountProvider()),
+        ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(
           create: (_) => NotificationProvider()..initNotifications(),
         ),
@@ -92,7 +89,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen());
+    final provider = context.watch<HomeProvider>();
+
+    return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: provider.locale,
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: provider.themeMode,
+      home: SplashScreen(),
+    );
   }
 }
 
@@ -104,6 +112,7 @@ class MainApp extends StatelessWidget {
     return Builder(
       builder: (context) {
         final provider = context.watch<HomeProvider>();
+        final l10n = AppLocalizations.of(context)!;
         if (provider.registerModel == null) {
           provider.getUser();
           return const Scaffold(
@@ -111,12 +120,7 @@ class MainApp extends StatelessWidget {
           );
         }
         return MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: provider.locale,
           debugShowCheckedModeBanner: false,
@@ -124,68 +128,86 @@ class MainApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: provider.themeMode,
           home: Scaffold(
-            appBar: AppBar(
-              title: Row(
-                spacing: 5,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.shield_outlined, color: Colors.blue),
-                  Text(
-                    'Safe Zone',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NotificationScreen(),
+            body: Consumer<HomeProvider>(
+              builder: (context, provider, _) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 260),
+                  reverseDuration: const Duration(milliseconds: 220),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) {
+                    final offsetAnimation = Tween<Offset>(
+                      begin: const Offset(0.03, 0),
+                      end: Offset.zero,
+                    ).animate(animation);
+
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
                       ),
                     );
                   },
-                  icon: Icon(
-                    Icons.notifications_none_outlined,
-                    color: Colors.blue,
+                  child: KeyedSubtree(
+                    key: ValueKey(provider.currentIndex),
+                    child: provider.screens[provider.currentIndex],
                   ),
-                ),
-              ],
-            ),
-            body: Consumer<HomeProvider>(
-              builder: (context, provider, _) {
-                return provider.screens[provider.currentIndex];
+                );
               },
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: Colors.blue,
-              unselectedItemColor: const Color.fromARGB(255, 130, 130, 130),
-              currentIndex: provider.currentIndex,
-              onTap: provider.channgeIndex,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_filled),
-                  label: 'Home',
+            bottomNavigationBar: Container(
+              height: 80,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  backgroundColor: Colors.black,
+                  selectedItemColor: Colors.blue.shade400,
+                  unselectedItemColor: Colors.grey.shade500,
+                  selectedFontSize: 12,
+                  unselectedFontSize: 11,
+                  currentIndex: provider.currentIndex,
+                  onTap: provider.channgeIndex,
+                  showSelectedLabels: true,
+                  showUnselectedLabels: true,
+                  elevation: 0,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_filled, size: 26),
+                      label: l10n.nav_home,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.location_on_outlined, size: 26),
+                      label: l10n.nav_location,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.apps, size: 26),
+                      label: l10n.nav_services,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person_outline_rounded, size: 26),
+                      label: l10n.nav_profile,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.settings_outlined, size: 26),
+                      label: l10n.nav_settings,
+                    ),
+                  ],
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.location_on_outlined),
-                  label: 'Location',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.apps),
-                  label: 'Services',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline_rounded),
-                  label: 'Profile',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings_outlined),
-                  label: 'Settings',
-                ),
-              ],
+              ),
             ),
           ),
         );
