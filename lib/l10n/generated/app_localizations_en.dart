@@ -533,6 +533,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trusted => 'trusted';
 
   @override
+  String get add_contacts => 'Add Contacts';
+
+  @override
   String get search_user_here => 'Search user here...';
 
   @override
@@ -822,7 +825,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get live_location_sharing_active => 'Live location sharing active';
 
   @override
-  String get updates_every_30_seconds => 'Updates every 30 seconds';
+  String get updates_every_30_seconds => 'Updates every minute';
 
   @override
   String get voice_note_shared => 'Voice note shared';
@@ -835,6 +838,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get arabic => 'Arabic';
+
+  @override
+  String get english_native => 'English';
+
+  @override
+  String get arabic_native => 'العربية';
 
   @override
   String get light_mode => 'Light Mode';
@@ -878,6 +887,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String sos_live_location_update(String mapUrl) {
+    return 'SOS live location update:\n$mapUrl';
+  }
+
+  @override
   String get are_you_safe => 'Are you safe?';
 
   @override
@@ -901,4 +915,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enable_at_least_one_trigger_first => 'Enable at least one trigger first';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get no_messages => 'There is no messages';
+
+  @override
+  String get start_chatting_now => 'Start chatting now';
+
+  @override
+  String get type_message => 'Type...';
+
+  @override
+  String get you_are_protected => 'You\'re Protected';
+
+  @override
+  String get here_for_your_safety => 'We\'re here for your safety';
+
+  @override
+  String get add_contact => 'Add Contact';
+
+  @override
+  String get live_location => 'Live Location';
+
+  @override
+  String get sharing_your_location => 'Sharing your location';
+
+  @override
+  String get live => 'Live';
+
+  @override
+  String get please_login_before_report => 'Please login before submitting a report.';
+
+  @override
+  String get please_add_incident_details => 'Please add an incident type, description, or media.';
+
+  @override
+  String get media_upload_failed => 'Media upload failed. Check storage settings and policies.';
 }

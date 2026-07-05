@@ -27,11 +27,6 @@ class LoginProvider extends ChangeNotifier {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      Fluttertoast.showToast(msg: l10n.login_successfully);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MainApp()),
-      );
       final user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
@@ -39,8 +34,15 @@ class LoginProvider extends ChangeNotifier {
         await girdServices.saveUserUid(user.uid);
         await NotificationProvider().saveCurrentUserFcmToken();
       }
+
+      Fluttertoast.showToast(msg: l10n.login_successfully);
+      if (!context.mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainApp()),
+      );
     } catch (e) {
-      print('Erorr With login :$e');
+      debugPrint('Error with login: $e');
       Fluttertoast.showToast(msg: l10n.an_error_occurred);
     } finally {
       isLoading = false;
@@ -48,20 +50,55 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<void> signInWithGoogle(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    isLoading = true;
+    notifyListeners();
 
-    if (googleUser == null) return null;
+    try {
+      final googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+      if (googleUser == null) return;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+      final user = userCredential.user;
+
+      if (user == null) {
+        Fluttertoast.showToast(msg: l10n.an_error_occurred);
+        return;
+      }
+
+      await saveUser(user);
+      final girdServices = GirdServicesData();
+      await girdServices.saveUserUid(user.uid);
+      await NotificationProvider().saveCurrentUserFcmToken();
+
+      Fluttertoast.showToast(msg: l10n.login_successfully);
+      if (!context.mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainApp()),
+      );
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(msg: e.message ?? l10n.an_error_occurred);
+    } catch (e) {
+      debugPrint('Error with Google sign-in: $e');
+      Fluttertoast.showToast(msg: l10n.an_error_occurred);
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future saveUser(User user) async {
@@ -69,11 +106,11 @@ class LoginProvider extends ChangeNotifier {
     final snapshot = await doc.get();
     if (!snapshot.exists) {
       await doc.set({
-        'name': user.displayName,
-        'email': user.email,
-        'photo': user.photoURL,
+        'name': user.displayName ?? '',
+        'email': user.email ?? '',
+        'phone': user.phoneNumber ?? '',
         'uid': user.uid,
-        'createdAt': DateTime.now(),
+        'isTrusted': false,
       });
     }
   }

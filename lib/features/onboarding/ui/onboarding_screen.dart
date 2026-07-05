@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/login/ui/login_screen.dart';
 import 'package:safe_zone/features/onboarding/logic/onboarding_provider.dart';
 
@@ -14,14 +15,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
     final provider = context.watch<OnboardingProvider>();
+    final screens = provider.localizedScreens(l10n);
     return Scaffold(
       body: Column(
         children: [
           Expanded(
             child: PageView.builder(
               controller: _controller,
-              itemCount: provider.screens.length,
+              itemCount: screens.length,
               onPageChanged: (index) {
                 setState(() {
                   currentIndex = index;
@@ -31,12 +34,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(provider.screens[index].image, height: 200),
+                    Image.asset(screens[index].image, height: 200),
                     SizedBox(height: 20),
 
                     SizedBox(height: 10),
                     Text(
-                      provider.screens[index].subtitle,
+                      screens[index].subtitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20,
@@ -52,7 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              provider.screens.length,
+              screens.length,
               (index) => Container(
                 margin: EdgeInsets.all(4),
                 width: currentIndex == index ? 12 : 8,
@@ -74,7 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 MaterialPageRoute(builder: (context) => LoginScreen()),
               );
             },
-            child: Text("Skip"),
+            child: Text(l10n.skip),
           ),
 
           SizedBox(height: 20),

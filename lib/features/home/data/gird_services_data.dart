@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -19,10 +21,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GirdServicesData extends ChangeNotifier {
   static const Duration _liveLocationUpdateInterval = Duration(seconds: 30);
+  static const Duration _sosLocationUpdateInterval = Duration(minutes: 1);
   static const int _liveLocationDistanceFilterMeters = 10;
 
   bool _isGettingCurrentLocation = false;
+  bool _isSendingSosLocation = false;
   DateTime? _lastLiveLocationUpdate;
+  Timer? _sosLocationTimer;
+  AppLocalizations? _sosLocationL10n;
 
   List<GridServicesModel> localizedGridServices(AppLocalizations l10n) => [
     GridServicesModel(
@@ -53,7 +59,7 @@ class GirdServicesData extends ChangeNotifier {
 
   String? location;
   String? locationName;
-  Future<void> getCurrentLocation() async {
+  Future<void> getCurrentLocation({AppLocalizations? l10n}) async {
     if (_isGettingCurrentLocation) return;
 
     _isGettingCurrentLocation = true;
@@ -69,6 +75,7 @@ class GirdServicesData extends ChangeNotifier {
       locationName = await getLocationName(
         position.latitude,
         position.longitude,
+        l10n: l10n,
       );
       notifyListeners();
     } catch (e) {
@@ -78,23 +85,29 @@ class GirdServicesData extends ChangeNotifier {
     }
   }
 
-  Future<String> getLocationName(double lat, double lon) async {
+  Future<String> getLocationName(
+    double lat,
+    double lon, {
+    AppLocalizations? l10n,
+  }) async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
 
-      if (placemarks.isEmpty) return "Unknown location";
+      if (placemarks.isEmpty) {
+        return l10n?.unknown_location ?? "Unknown location";
+      }
 
       Placemark place = placemarks[0];
 
       return '${place.locality ?? ''}, ${place.country ?? ''}';
     } catch (e) {
-      return "Error getting location";
+      return l10n?.error_getting_location ?? "Error getting location";
     }
   }
 
-  Future<void> shareLocation() async {
+  Future<void> shareLocation({AppLocalizations? l10n}) async {
     try {
-      await getCurrentLocation();
+      await getCurrentLocation(l10n: l10n);
       if (location != null) {
         await Share.share(
           'https://www.google.com/maps/search/?api=1&query=$location',
@@ -109,6 +122,7 @@ class GirdServicesData extends ChangeNotifier {
   String? liveLocation;
   LatLng? currentLatLng;
   List<LatLng> path = [];
+  bool get isSosLocationSharingActive => _sosLocationTimer != null;
 
   Future<void> startLiveTracking() async {
     if (positionStream != null) return;
@@ -144,8 +158,105 @@ class GirdServicesData extends ChangeNotifier {
     positionStream = null;
     liveLocation = null;
     _lastLiveLocationUpdate = null;
+    stopSosLocationSharing();
     print('Stop');
     notifyListeners();
+  }
+
+  Future<void> startSosLocationSharing({AppLocalizations? l10n}) async {
+    if (_sosLocationTimer != null) return;
+
+    final hasPermission = await locationPer();
+    if (!hasPermission) return;
+
+    _sosLocationL10n = l10n;
+    await _sendSosLocationUpdate(l10n: l10n);
+    _sosLocationTimer = Timer.periodic(_sosLocationUpdateInterval, (_) {
+      _sendSosLocationUpdate(l10n: _sosLocationL10n);
+    });
+    notifyListeners();
+  }
+
+  void stopSosLocationSharing() {
+    _sosLocationTimer?.cancel();
+    _sosLocationTimer = null;
+    _sosLocationL10n = null;
+  }
+
+  Future<void> _sendSosLocationUpdate({AppLocalizations? l10n}) async {
+    if (_isSendingSosLocation) return;
+
+    _isSendingSosLocation = true;
+    try {
+      final uid =
+          FirebaseAuth.instance.currentUser?.uid ?? await getStoredUid();
+      if (uid == null) return;
+
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
+
+      currentLatLng = LatLng(position.latitude, position.longitude);
+      location = '${position.latitude}, ${position.longitude}';
+      path.add(currentLatLng!);
+
+      await _sendSosLocationMessageToTrustedContacts(
+        senderUid: uid,
+        lat: position.latitude,
+        lon: position.longitude,
+        l10n: l10n,
+      );
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error sending SOS location update: $e');
+    } finally {
+      _isSendingSosLocation = false;
+    }
+  }
+
+  Future<void> _sendSosLocationMessageToTrustedContacts({
+    required String senderUid,
+    required double lat,
+    required double lon,
+    AppLocalizations? l10n,
+  }) async {
+    final firestore = FirebaseFirestore.instance;
+    final trustedResult =
+        await firestore
+            .collection('users')
+            .doc(senderUid)
+            .collection('trustedContacts')
+            .get();
+
+    if (trustedResult.docs.isEmpty) return;
+
+    final senderDoc = await firestore.collection('users').doc(senderUid).get();
+    final senderData = senderDoc.data() ?? {};
+    final senderName = senderData['name'] ?? '';
+    final mapUrl = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
+    final now = DateTime.now();
+    final content =
+        l10n?.sos_live_location_update(mapUrl) ??
+        'SOS live location update:\n$mapUrl';
+    final batch = firestore.batch();
+
+    for (final trustedDoc in trustedResult.docs) {
+      final trustedData = trustedDoc.data();
+      final messageRef = firestore.collection('messages').doc();
+
+      batch.set(messageRef, {
+        'id': messageRef.id,
+        'receiverName': trustedData['name'] ?? '',
+        'receiverUid': trustedDoc.id,
+        'senderName': senderName,
+        'senderUid': senderUid,
+        'createdAt': now.toString(),
+        'content': content,
+        'type': 'text',
+      });
+    }
+
+    await batch.commit();
   }
 
   void naviagteTo(BuildContext context, Widget screen) {
@@ -160,7 +271,7 @@ class GirdServicesData extends ChangeNotifier {
 
     final microphoneStatus = await Permission.microphone.request();
     if (!microphoneStatus.isGranted) {
-      print("❌ Microphone permission denied");
+      print("Microphone permission denied");
       return;
     }
 
@@ -207,7 +318,7 @@ class GirdServicesData extends ChangeNotifier {
   }) async {
     final uid = await getStoredUid();
     if (uid == null) {
-      print("❌ No stored UID");
+      print("No stored UID");
       return;
     }
 
@@ -226,7 +337,7 @@ class GirdServicesData extends ChangeNotifier {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       await NotificationProvider().showNotification();
-      print("SOS sent successfully 🔥");
+      print("SOS sent successfully");
     } else {
       print("Failed: ${response.statusCode}");
     }
@@ -243,10 +354,11 @@ class GirdServicesData extends ChangeNotifier {
       desiredAccuracy: LocationAccuracy.best,
     );
     currentLatLng = LatLng(position.latitude, position.longitude);
+    await startSosLocationSharing();
 
     final audioPath = await record10Seconds();
     if (audioPath == null || currentLatLng == null) {
-      print("Missing voice SOS data ❌");
+      print("Missing voice SOS data");
       return;
     }
 
@@ -260,6 +372,7 @@ class GirdServicesData extends ChangeNotifier {
 
   Future<void> cancelSOS() async {
     stopTracking();
+    stopSosLocationSharing();
     currentLatLng = null;
     await _recorder.stopRecorder();
   }

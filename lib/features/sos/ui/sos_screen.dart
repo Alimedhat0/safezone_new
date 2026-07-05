@@ -17,6 +17,7 @@ class _SosScreenState extends State<SosScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 11)).then((_) {
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AfterSos()),

@@ -32,9 +32,10 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
       final homeProvider = context.read<HomeProvider>();
       final gridProvider = context.read<GirdServicesData>();
       final locationProvider = context.read<LocationProvider>();
+      final l10n = context.tr;
 
       await homeProvider.getTrustedUsers();
-      await gridProvider.getCurrentLocation();
+      await gridProvider.getCurrentLocation(l10n: l10n);
 
       if (!mounted) return;
       final currentLocation = gridProvider.currentLatLng;
@@ -48,6 +49,7 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
+        final l10n = context.tr;
         final homePro = context.read<HomeProvider>();
         final locationPro = context.watch<LocationProvider>();
         final grid = context.watch<GirdServicesData>();
@@ -104,17 +106,17 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                     color: Colors.white,
                                     size: 30,
                                   ),
-                                  const Text(
-                                    "You're Protected",
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.you_are_protected,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24,
                                     ),
                                   ),
-                                  const Text(
-                                    "We're here for your safety",
-                                    style: TextStyle(color: Colors.white),
+                                  Text(
+                                    l10n.here_for_your_safety,
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ],
                               ),
@@ -207,7 +209,9 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                     FloatingActionButton.small(
                                       backgroundColor: Colors.black,
                                       onPressed: () async {
-                                        await grid.getCurrentLocation();
+                                        await grid.getCurrentLocation(
+                                          l10n: l10n,
+                                        );
                                         final location = grid.currentLatLng;
                                         if (location != null) {
                                           locationPro.moveTo(location);
@@ -264,7 +268,9 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                               .trustedContacts
                                               .isEmpty) {
                                             return Text(
-                                              'There is no contacts ${provider.trustedContacts.length}',
+                                              l10n.home_no_contacts(
+                                                provider.trustedContacts.length,
+                                              ),
                                               style: const TextStyle(
                                                 color: Colors.white,
                                               ),
@@ -341,9 +347,11 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                           color: Colors.blue,
                                         ),
                                       ),
-                                      const Text(
-                                        'Add Contact',
-                                        style: TextStyle(color: Colors.white),
+                                      Text(
+                                        l10n.add_contact,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -375,8 +383,9 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                               ),
                               onPressed: () async {
                                 final navigator = Navigator.of(context);
-                                await grid.init();
                                 await grid.startLiveTracking();
+                                await grid.startSosLocationSharing(l10n: l10n);
+                                await grid.init();
                                 if (!mounted) return;
                                 navigator.push(
                                   MaterialPageRoute(
@@ -393,12 +402,12 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                     lon: grid.currentLatLng!.longitude,
                                   );
                                 } else {
-                                  debugPrint("Missing data ❌");
+                                  debugPrint("Missing data");
                                 }
                               },
-                              child: const Text(
-                                'SOS',
-                                style: TextStyle(
+                              child: Text(
+                                l10n.sos,
+                                style: const TextStyle(
                                   fontSize: 25,
                                   color: Colors.white,
                                 ),
@@ -432,18 +441,18 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Live Location',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.live_location,
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const Text(
-                                    'Sharing your location',
-                                    style: TextStyle(color: Colors.blue),
+                                  Text(
+                                    l10n.sharing_your_location,
+                                    style: const TextStyle(color: Colors.blue),
                                   ),
                                   Text(
-                                    (grid.locationName.toString()),
+                                    grid.locationName ?? l10n.unknown_location,
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
@@ -459,16 +468,16 @@ class _SecondHomeScreenState extends State<SecondHomeScreen> {
                                 ),
                               ),
                               onPressed: grid.startLiveTracking,
-                              child: const Row(
+                              child: Row(
                                 spacing: 5,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.broadcast_on_home,
                                     color: Colors.blue,
                                   ),
                                   Text(
-                                    'Live',
-                                    style: TextStyle(color: Colors.blue),
+                                    l10n.live,
+                                    style: const TextStyle(color: Colors.blue),
                                   ),
                                 ],
                               ),

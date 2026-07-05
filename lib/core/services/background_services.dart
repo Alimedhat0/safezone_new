@@ -9,7 +9,7 @@ final GirdServicesData _service = GirdServicesData();
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
-  print("✅ Flutter Background Service Running");
+  print("Flutter Background Service Running");
 }
 
 const platform = MethodChannel('voice_service');
@@ -45,9 +45,9 @@ Future<void> pushVoiceKeywordsToNative(List<String> keywords) async {
   try {
     await platform.invokeMethod('setKeywords', normalized);
   } on MissingPluginException {
-    print("⚠️ Voice keywords sync skipped (plugin not ready)");
+    print("Voice keywords sync skipped (plugin not ready)");
   } on PlatformException catch (e) {
-    print("❌ Failed to sync voice keywords: ${e.message}");
+    print("Failed to sync voice keywords: ${e.message}");
   }
 }
 
@@ -67,7 +67,7 @@ Future<void> clearVoiceKeywords() async {
 Future<bool> startVoiceService() async {
   final microphoneStatus = await Permission.microphone.request();
   if (!microphoneStatus.isGranted) {
-    print("❌ Microphone permission denied");
+    print(" Microphone permission denied");
     return false;
   }
 
@@ -77,14 +77,14 @@ Future<bool> startVoiceService() async {
     final storedKeywords = await getStoredVoiceKeywords();
     await pushVoiceKeywordsToNative(storedKeywords);
     await platform.invokeMethod('startService');
-    print("✅ Native voice service started");
+    print("Native voice service started");
     _isVoiceServiceRunning = true;
     return true;
   } on MissingPluginException {
-    print("❌ Voice service plugin is not available on this platform");
+    print(" Voice service plugin is not available on this platform");
     return false;
   } on PlatformException catch (e) {
-    print("❌ Failed to start voice service: ${e.message}");
+    print(" Failed to start voice service: ${e.message}");
     return false;
   }
 }
@@ -92,15 +92,15 @@ Future<bool> startVoiceService() async {
 Future<bool> stopVoiceService() async {
   try {
     await platform.invokeMethod('stopService');
-    print("✅ Native voice service stopped");
+    print("Native voice service stopped");
     _isVoiceServiceRunning = false;
     return true;
   } on MissingPluginException {
-    print("⚠️ Voice service plugin is not available on this platform");
+    print("Voice service plugin is not available on this platform");
     _isVoiceServiceRunning = false;
     return false;
   } on PlatformException catch (e) {
-    print("❌ Failed to stop voice service: ${e.message}");
+    print(" Failed to stop voice service: ${e.message}");
     return false;
   }
 }
@@ -119,7 +119,7 @@ Future<void> _handleVoiceDetected(String text) async {
 
     await _service.triggerVoiceSos();
   } catch (e) {
-    print("❌ Voice SOS failed: $e");
+    print(" Voice SOS failed: $e");
   } finally {
     if (shouldRestartVoiceService) {
       await startVoiceService();
@@ -133,7 +133,7 @@ void listenToVoice() {
   platform.setMethodCallHandler((call) async {
     if (call.method == "onVoiceDetected") {
       final text = call.arguments?.toString() ?? "";
-      print("🚨 SOS voice trigger: $text");
+      print("SOS voice trigger: $text");
       await _handleVoiceDetected(text);
     }
   });

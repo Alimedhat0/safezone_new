@@ -200,6 +200,7 @@
   "test_voice_trigger": "Test Voice Trigger",
   "mic_permission_denied": "Mic permission denied",
   "trusted": "trusted",
+  "add_contacts": "Add Contacts",
   "search_user_here": "Search user here...",
   "enter_message_here": "Enter Message here",
   "map_style_streets_ar": "خريطة شوارع",
@@ -309,11 +310,13 @@
   "emergency_contacts_notified": "Emergency contacts notified",
   "contacts_received_alert": "Contacts received your alert",
   "live_location_sharing_active": "Live location sharing active",
-  "updates_every_30_seconds": "Updates every 30 seconds",
+  "updates_every_30_seconds": "Updates every minute",
   "voice_note_shared": "Voice note shared",
   "ten_second_recording_sent": "10 second recording sent",
   "english": "English",
   "arabic": "Arabic",
+  "english_native": "English",
+  "arabic_native": "العربية",
   "light_mode": "Light Mode",
   "dark_mode": "Dark Mode",
   "skip": "Skip",
@@ -333,6 +336,14 @@
         "type": "String"
       },
       "location": {
+        "type": "String"
+      }
+    }
+  },
+  "sos_live_location_update": "SOS live location update:\n{mapUrl}",
+  "@sos_live_location_update": {
+    "placeholders": {
+      "mapUrl": {
         "type": "String"
       }
     }
@@ -357,5 +368,18 @@
       }
     }
   },
-  "enable_at_least_one_trigger_first": "Enable at least one trigger first"
+  "enable_at_least_one_trigger_first": "Enable at least one trigger first",
+  "online": "Online",
+  "no_messages": "There is no messages",
+  "start_chatting_now": "Start chatting now",
+  "type_message": "Type...",
+  "you_are_protected": "You're Protected",
+  "here_for_your_safety": "We're here for your safety",
+  "add_contact": "Add Contact",
+  "live_location": "Live Location",
+  "sharing_your_location": "Sharing your location",
+  "live": "Live",
+  "please_login_before_report": "Please login before submitting a report.",
+  "please_add_incident_details": "Please add an incident type, description, or media.",
+  "media_upload_failed": "Media upload failed. Check storage settings and policies."
 }

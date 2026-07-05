@@ -35,6 +35,7 @@ class ServicesProvider extends ChangeNotifier {
   PlatformFile? selectedMedia;
   bool isPickingMedia = false;
   bool isSubmittingReport = false;
+  String? lastReportError;
 
   String? get selectedMediaName => selectedMedia?.name;
 
@@ -52,6 +53,7 @@ class ServicesProvider extends ChangeNotifier {
 
   Future<void> pickMedia() async {
     isPickingMedia = true;
+    lastReportError = null;
     notifyListeners();
 
     try {
@@ -79,17 +81,20 @@ class ServicesProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> submitIncidentReport() async {
+  Future<void> submitIncidentReport(AppLocalizations l10n) async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return false;
+    if (user == null) {
+      throw Exception(l10n.please_login_before_report);
+    }
 
     final incidentType = incidentController.text.trim();
     final description = descriptionController.text.trim();
     if (incidentType.isEmpty && description.isEmpty && selectedMedia == null) {
-      return false;
+      throw Exception(l10n.please_add_incident_details);
     }
 
     isSubmittingReport = true;
+    lastReportError = null;
     notifyListeners();
 
     try {
@@ -103,20 +108,24 @@ class ServicesProvider extends ChangeNotifier {
         mediaPath =
             '${user.uid}/${DateTime.now().millisecondsSinceEpoch}.$extension';
 
-        await Supabase.instance.client.storage
-            .from(_mediaBucket)
-            .upload(
-              mediaPath,
-              file,
-              fileOptions: FileOptions(
-                upsert: true,
-                contentType: _contentTypeFor(media.extension),
-              ),
-            );
+        try {
+          await Supabase.instance.client.storage
+              .from(_mediaBucket)
+              .upload(
+                mediaPath,
+                file,
+                fileOptions: FileOptions(
+                  upsert: true,
+                  contentType: _contentTypeFor(media.extension),
+                ),
+              );
 
-        mediaUrl = Supabase.instance.client.storage
-            .from(_mediaBucket)
-            .getPublicUrl(mediaPath);
+          mediaUrl = Supabase.instance.client.storage
+              .from(_mediaBucket)
+              .getPublicUrl(mediaPath);
+        } catch (_) {
+          throw Exception(l10n.media_upload_failed);
+        }
       }
 
       await FirebaseFirestore.instance.collection('incidentReports').add({
@@ -133,7 +142,9 @@ class ServicesProvider extends ChangeNotifier {
       incidentController.clear();
       descriptionController.clear();
       selectedMedia = null;
-      return true;
+    } catch (error) {
+      lastReportError = error.toString().replaceFirst('Exception: ', '');
+      rethrow;
     } finally {
       isSubmittingReport = false;
       notifyListeners();

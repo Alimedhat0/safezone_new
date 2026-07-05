@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/features/voice_activation/logic/voice_activation_provider.dart';
 
 class VoiceActivationScreen extends StatelessWidget {
@@ -8,10 +9,23 @@ class VoiceActivationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
+    String sensitivityLabel(String value) {
+      switch (value) {
+        case 'Low':
+          return l10n.low;
+        case 'High':
+          return l10n.high;
+        default:
+          return l10n.medium;
+      }
+    }
+
     return ChangeNotifierProvider(
       create: (context) => VoiceActivationProvider()..getSecretword(),
       child: Scaffold(
-        appBar: AppBar(title: Text('Voice Activation'), centerTitle: true),
+        appBar: AppBar(title: Text(l10n.voice_activation), centerTitle: true),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -23,7 +37,7 @@ class VoiceActivationScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 16,
                       children: [
-                        Text('Set Your Emegency Keyword'),
+                        Text(l10n.set_your_emergency_keyword),
                         SizedBox(
                           width: double.infinity,
                           child: Card(
@@ -36,8 +50,8 @@ class VoiceActivationScreen extends StatelessWidget {
                                   TextField(
                                     controller: provider.keywordController,
                                     decoration: InputDecoration(
-                                      labelText: 'Keyword you will say',
-                                      hintText: 'ex: help me',
+                                      labelText: l10n.keyword_you_will_say,
+                                      hintText: l10n.keyword_example,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -82,26 +96,26 @@ class VoiceActivationScreen extends StatelessWidget {
                                     child:
                                         provider.isSavingKeyword
                                             ? Text(
-                                              'Saving...',
+                                              l10n.saving,
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
                                             )
                                             : provider.isRecording
                                             ? Text(
-                                              'Tap to Save Keyword',
+                                              l10n.tap_to_save_keyword,
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
                                             )
                                             : Text(
-                                              'Tap to Record your keyword',
+                                              l10n.tap_to_record_keyword,
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
                                             ),
                                   ),
-                                  Text('Recommended: 1–2 words only'),
+                                  Text(l10n.recommended_one_or_two_words),
                                 ],
                               ),
                             ),
@@ -146,7 +160,7 @@ class VoiceActivationScreen extends StatelessWidget {
                                             ),
                                           ),
                                           title: Text(
-                                            'Preview your recorded keyword',
+                                            l10n.preview_recorded_keyword,
                                           ),
                                           subtitle:
                                               provider
@@ -155,7 +169,11 @@ class VoiceActivationScreen extends StatelessWidget {
                                                       .isEmpty
                                                   ? null
                                                   : Text(
-                                                    'Keyword: ${provider.audioList[index].keyword}',
+                                                    l10n.keyword_label(
+                                                      provider
+                                                          .audioList[index]
+                                                          .keyword,
+                                                    ),
                                                   ),
                                           trailing: IconButton(
                                             onPressed: () {
@@ -164,7 +182,7 @@ class VoiceActivationScreen extends StatelessWidget {
                                                 builder: (dialogContext) {
                                                   return AlertDialog(
                                                     title: Text(
-                                                      "Delete Audio?",
+                                                      l10n.delete_audio,
                                                     ),
                                                     actions: [
                                                       TextButton(
@@ -172,7 +190,9 @@ class VoiceActivationScreen extends StatelessWidget {
                                                             () => Navigator.pop(
                                                               dialogContext,
                                                             ),
-                                                        child: Text("Cancel"),
+                                                        child: Text(
+                                                          l10n.cancel,
+                                                        ),
                                                       ),
                                                       TextButton(
                                                         onPressed: () {
@@ -184,7 +204,9 @@ class VoiceActivationScreen extends StatelessWidget {
                                                             dialogContext,
                                                           );
                                                         },
-                                                        child: Text("Delete"),
+                                                        child: Text(
+                                                          l10n.delete,
+                                                        ),
                                                       ),
                                                     ],
                                                   );
@@ -205,11 +227,11 @@ class VoiceActivationScreen extends StatelessWidget {
                                             ),
                                             onPressed: () {
                                               Fluttertoast.showToast(
-                                                msg: 'Saved Successfully',
+                                                msg: l10n.saved_successfully,
                                               );
                                             },
                                             child: Text(
-                                              'Confirm Keyword',
+                                              l10n.confirm_keyword,
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
@@ -225,7 +247,7 @@ class VoiceActivationScreen extends StatelessWidget {
                           },
                         ),
 
-                        Text('Detection Sensitivity'),
+                        Text(l10n.detection_sensitivity),
                         DropdownButtonFormField<String>(
                           value: provider.selectedOption,
                           decoration: InputDecoration(
@@ -238,7 +260,7 @@ class VoiceActivationScreen extends StatelessWidget {
                                   .map(
                                     (item) => DropdownMenuItem(
                                       value: item,
-                                      child: Text(item),
+                                      child: Text(sensitivityLabel(item)),
                                     ),
                                   )
                                   .toList(),
@@ -267,10 +289,10 @@ class VoiceActivationScreen extends StatelessWidget {
                             ),
                             label: Text(
                               provider.isTogglingBackgroundListening
-                                  ? 'Please wait...'
+                                  ? l10n.please_wait
                                   : provider.isBackgroundListening
-                                  ? 'Stop Background Listening'
-                                  : 'Start Background Listening',
+                                  ? l10n.stop_background_listening
+                                  : l10n.start_background_listening,
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -284,7 +306,7 @@ class VoiceActivationScreen extends StatelessWidget {
                               ),
                               onPressed: null,
                               child: Text(
-                                'Test Voice Trigger',
+                                l10n.test_voice_trigger,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),

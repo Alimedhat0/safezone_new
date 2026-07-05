@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:safe_zone/core/aspict/app_aspict.dart';
 import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
+import 'package:safe_zone/features/login/logic/login_provider.dart';
 import 'package:safe_zone/features/login/ui/login_screen.dart';
 import 'package:safe_zone/features/register/logic/register_provider.dart';
 
@@ -14,8 +15,11 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.tr;
 
-    return ChangeNotifierProvider(
-      create: (context) => RegisterProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RegisterProvider()),
+        ChangeNotifierProvider(create: (context) => LoginProvider()),
+      ],
       builder: (context, child) {
         final regProvider = context.read<RegisterProvider>();
         return Scaffold(
@@ -28,8 +32,8 @@ class RegisterScreen extends StatelessWidget {
                   'assests/images/safezoneupdatedicon.png',
                   height: 150,
                 ),
-                Consumer<RegisterProvider>(
-                  builder: (context, value, child) {
+                Consumer2<RegisterProvider, LoginProvider>(
+                  builder: (context, value, loginProvider, child) {
                     return Form(
                       key: regProvider.formKey,
                       child: Column(
@@ -69,7 +73,8 @@ class RegisterScreen extends StatelessWidget {
                             prefixIcon: Icon(Icons.phone),
                           ),
 
-                          regProvider.isLoading == true
+                          regProvider.isLoading == true ||
+                                  loginProvider.isLoading == true
                               ? CircularProgressIndicator()
                               : SizedBox(
                                 width: screenWidth,
@@ -117,7 +122,13 @@ class RegisterScreen extends StatelessWidget {
                                 elevation: 6,
                                 backgroundColor: Colors.white,
                               ),
-                              onPressed: null,
+                              onPressed:
+                                  loginProvider.isLoading ||
+                                          regProvider.isLoading
+                                      ? null
+                                      : () => loginProvider.signInWithGoogle(
+                                        context,
+                                      ),
                               child: Row(
                                 spacing: 10,
                                 mainAxisAlignment: MainAxisAlignment.center,

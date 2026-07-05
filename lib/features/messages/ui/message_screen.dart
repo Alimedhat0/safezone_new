@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/messages/logic/message_provider.dart';
 import 'package:safe_zone/features/messages/widgets/voice_bubble.dart';
@@ -33,7 +34,7 @@ class MessageScreen extends StatelessWidget {
                         Expanded(
                           child:
                               provider.messages.isEmpty
-                                  ? _buildEmptyState()
+                                  ? _buildEmptyState(context)
                                   : ListView.builder(
                                     padding: const EdgeInsets.only(
                                       top: 12,
@@ -120,8 +121,8 @@ class MessageScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  const Text(
-                    "Online",
+                  Text(
+                    context.tr.online,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.green,
@@ -240,7 +241,9 @@ class MessageScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final l10n = context.tr;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -252,7 +255,7 @@ class MessageScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            "There is no messages",
+            l10n.no_messages,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -261,7 +264,7 @@ class MessageScreen extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            "Start chatting now",
+            l10n.start_chatting_now,
             style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
           ),
         ],
@@ -270,6 +273,8 @@ class MessageScreen extends StatelessWidget {
   }
 
   Widget _buildInputBar(BuildContext context, MessageProvider provider) {
+    final l10n = context.tr;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       decoration: BoxDecoration(
@@ -313,7 +318,7 @@ class MessageScreen extends StatelessWidget {
           Expanded(
             child: CustomTextField(
               controller: provider.messageController,
-              text: 'Type...',
+              text: l10n.type_message,
               prefixIcon: const Icon(
                 Icons.emoji_emotions_outlined,
                 color: Colors.grey,

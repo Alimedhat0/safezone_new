@@ -56,7 +56,10 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => EmergencyProvider()),
         ChangeNotifierProvider(
           create:
-              (_) => EditProfileProvider()..init(HomeProvider().registerModel),
+              (_) =>
+                  EditProfileProvider()
+                    ..init(HomeProvider().registerModel)
+                    ..loadImage(),
         ),
         ChangeNotifierProvider(
           create: (_) => SettingsProvider()..loadSettings(),

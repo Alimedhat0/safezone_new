@@ -21,7 +21,7 @@ class LanguageScreen extends StatelessWidget {
                 value: 'en',
                 groupValue: provider.locale.languageCode,
                 title: l10n.english,
-                subtitle: 'English',
+                subtitle: l10n.english_native,
                 onTap: () {
                   provider.changLang('en');
                 },
@@ -30,7 +30,7 @@ class LanguageScreen extends StatelessWidget {
                 value: 'ar',
                 groupValue: provider.locale.languageCode,
                 title: l10n.arabic,
-                subtitle: 'العربية',
+                subtitle: l10n.arabic_native,
                 onTap: () {
                   provider.changLang('ar');
                 },

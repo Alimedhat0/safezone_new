@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_zone/core/extensions/localization_extension.dart';
 import 'package:safe_zone/core/widgets/custom_text_field.dart';
 import 'package:safe_zone/features/home/logic/home_provider.dart';
 import 'package:safe_zone/features/messages/ui/message_screen.dart';
@@ -25,8 +26,10 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.tr;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Add Contacts')),
+      appBar: AppBar(title: Text(l10n.add_contacts)),
       body: Consumer<HomeProvider>(
         builder: (context, value, child) {
           final provider = context.read<HomeProvider>();
@@ -40,7 +43,7 @@ class _TrustedContactScreenState extends State<TrustedContactScreen> {
               children: [
                 CustomTextField(
                   controller: provider.searchController,
-                  text: 'Search user here...',
+                  text: l10n.search_user_here,
                   onSubmit: (value) {
                     if (value.isNotEmpty) {
                       provider.searchForUser();

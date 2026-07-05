@@ -1127,6 +1127,12 @@ abstract class AppLocalizations {
   /// **'trusted'**
   String get trusted;
 
+  /// No description provided for @add_contacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Contacts'**
+  String get add_contacts;
+
   /// No description provided for @search_user_here.
   ///
   /// In en, this message translates to:
@@ -1700,7 +1706,7 @@ abstract class AppLocalizations {
   /// No description provided for @updates_every_30_seconds.
   ///
   /// In en, this message translates to:
-  /// **'Updates every 30 seconds'**
+  /// **'Updates every minute'**
   String get updates_every_30_seconds;
 
   /// No description provided for @voice_note_shared.
@@ -1726,6 +1732,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Arabic'**
   String get arabic;
+
+  /// No description provided for @english_native.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english_native;
+
+  /// No description provided for @arabic_native.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية'**
+  String get arabic_native;
 
   /// No description provided for @light_mode.
   ///
@@ -1805,6 +1823,12 @@ abstract class AppLocalizations {
   /// **'{name} needs help. Location: {location}'**
   String needs_help_location(String name, String location);
 
+  /// No description provided for @sos_live_location_update.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS live location update:\n{mapUrl}'**
+  String sos_live_location_update(String mapUrl);
+
   /// No description provided for @are_you_safe.
   ///
   /// In en, this message translates to:
@@ -1846,6 +1870,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enable at least one trigger first'**
   String get enable_at_least_one_trigger_first;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @no_messages.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no messages'**
+  String get no_messages;
+
+  /// No description provided for @start_chatting_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Start chatting now'**
+  String get start_chatting_now;
+
+  /// No description provided for @type_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Type...'**
+  String get type_message;
+
+  /// No description provided for @you_are_protected.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re Protected'**
+  String get you_are_protected;
+
+  /// No description provided for @here_for_your_safety.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re here for your safety'**
+  String get here_for_your_safety;
+
+  /// No description provided for @add_contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Contact'**
+  String get add_contact;
+
+  /// No description provided for @live_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Location'**
+  String get live_location;
+
+  /// No description provided for @sharing_your_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing your location'**
+  String get sharing_your_location;
+
+  /// No description provided for @live.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get live;
+
+  /// No description provided for @please_login_before_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Please login before submitting a report.'**
+  String get please_login_before_report;
+
+  /// No description provided for @please_add_incident_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add an incident type, description, or media.'**
+  String get please_add_incident_details;
+
+  /// No description provided for @media_upload_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Media upload failed. Check storage settings and policies.'**
+  String get media_upload_failed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

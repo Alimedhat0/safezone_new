@@ -533,6 +533,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trusted => 'الموثوقون';
 
   @override
+  String get add_contacts => 'إضافة جهات اتصال';
+
+  @override
   String get search_user_here => 'ابحث عن مستخدم هنا...';
 
   @override
@@ -822,7 +825,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get live_location_sharing_active => 'مشاركة الموقع المباشر نشطة';
 
   @override
-  String get updates_every_30_seconds => 'تحديث كل 30 ثانية';
+  String get updates_every_30_seconds => 'تحديث كل دقيقة';
 
   @override
   String get voice_note_shared => 'تمت مشاركة الملاحظة الصوتية';
@@ -835,6 +838,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get arabic => 'العربية';
+
+  @override
+  String get english_native => 'English';
+
+  @override
+  String get arabic_native => 'العربية';
 
   @override
   String get light_mode => 'الوضع الفاتح';
@@ -878,6 +887,11 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String sos_live_location_update(String mapUrl) {
+    return 'تحديث الموقع المباشر للاستغاثة:\n$mapUrl';
+  }
+
+  @override
   String get are_you_safe => 'هل أنت آمن؟';
 
   @override
@@ -901,4 +915,43 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get enable_at_least_one_trigger_first => 'فعّل وسيلة واحدة على الأقل أولًا';
+
+  @override
+  String get online => 'متصل';
+
+  @override
+  String get no_messages => 'لا توجد رسائل';
+
+  @override
+  String get start_chatting_now => 'ابدأ المحادثة الآن';
+
+  @override
+  String get type_message => 'اكتب...';
+
+  @override
+  String get you_are_protected => 'أنت محمي';
+
+  @override
+  String get here_for_your_safety => 'نحن هنا من أجل سلامتك';
+
+  @override
+  String get add_contact => 'إضافة جهة اتصال';
+
+  @override
+  String get live_location => 'الموقع المباشر';
+
+  @override
+  String get sharing_your_location => 'جارٍ مشاركة موقعك';
+
+  @override
+  String get live => 'مباشر';
+
+  @override
+  String get please_login_before_report => 'يرجى تسجيل الدخول قبل إرسال البلاغ.';
+
+  @override
+  String get please_add_incident_details => 'يرجى إضافة نوع الحادث أو الوصف أو وسائط.';
+
+  @override
+  String get media_upload_failed => 'فشل رفع الوسائط. تحقق من إعدادات وسياسات التخزين.';
 }

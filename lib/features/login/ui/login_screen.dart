@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -134,16 +133,10 @@ class LoginScreen extends StatelessWidget {
                               elevation: 6,
                               backgroundColor: Colors.white,
                             ),
-                            onPressed: () async {
-                              var userCredential =
-                                  await provider.signInWithGoogle();
-
-                              if (userCredential != null) {
-                                User user = userCredential.user!;
-                                await provider.saveUser(user);
-                                print(user);
-                              }
-                            },
+                            onPressed:
+                                provider.isLoading
+                                    ? null
+                                    : () => provider.signInWithGoogle(context),
                             child: Row(
                               spacing: 10,
                               mainAxisAlignment: MainAxisAlignment.center,

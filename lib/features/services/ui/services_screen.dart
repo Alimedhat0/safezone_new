@@ -219,7 +219,7 @@ class ServicesScreen extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: () {
-                                      gridProvider.shareLocation();
+                                      gridProvider.shareLocation(l10n: l10n);
                                     },
                                     child: Row(
                                       children: [
@@ -283,13 +283,11 @@ class ServicesScreen extends StatelessWidget {
                                             ? null
                                             : () async {
                                               try {
-                                                final isSent =
-                                                    await provider
-                                                        .submitIncidentReport();
+                                                await provider
+                                                    .submitIncidentReport(
+                                                      l10n,
+                                                    );
                                                 if (!context.mounted) return;
-                                                if (!isSent) {
-                                                  return;
-                                                }
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
@@ -301,13 +299,19 @@ class ServicesScreen extends StatelessWidget {
                                                 );
                                               } catch (e) {
                                                 if (!context.mounted) return;
+                                                final message = provider
+                                                        .lastReportError ??
+                                                    e
+                                                        .toString()
+                                                        .replaceFirst(
+                                                          'Exception: ',
+                                                          '',
+                                                        );
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
                                                   SnackBar(
-                                                    content: Text(
-                                                      'Failed to submit report: $e',
-                                                    ),
+                                                    content: Text(message),
                                                   ),
                                                 );
                                               }

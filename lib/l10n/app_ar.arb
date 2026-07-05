@@ -200,6 +200,7 @@
   "test_voice_trigger": "اختبار التفعيل الصوتي",
   "mic_permission_denied": "تم رفض إذن الميكروفون",
   "trusted": "الموثوقون",
+  "add_contacts": "إضافة جهات اتصال",
   "search_user_here": "ابحث عن مستخدم هنا...",
   "enter_message_here": "اكتب الرسالة هنا",
   "map_style_streets_ar": "خريطة شوارع",
@@ -309,11 +310,13 @@
   "emergency_contacts_notified": "تم إخطار جهات اتصال الطوارئ",
   "contacts_received_alert": "استلمت جهات الاتصال التنبيه",
   "live_location_sharing_active": "مشاركة الموقع المباشر نشطة",
-  "updates_every_30_seconds": "تحديث كل 30 ثانية",
+  "updates_every_30_seconds": "تحديث كل دقيقة",
   "voice_note_shared": "تمت مشاركة الملاحظة الصوتية",
   "ten_second_recording_sent": "تم إرسال تسجيل مدته 10 ثوانٍ",
   "english": "الإنجليزية",
   "arabic": "العربية",
+  "english_native": "English",
+  "arabic_native": "العربية",
   "light_mode": "الوضع الفاتح",
   "dark_mode": "الوضع الداكن",
   "skip": "تخطي",
@@ -333,6 +336,14 @@
         "type": "String"
       },
       "location": {
+        "type": "String"
+      }
+    }
+  },
+  "sos_live_location_update": "تحديث الموقع المباشر للاستغاثة:\n{mapUrl}",
+  "@sos_live_location_update": {
+    "placeholders": {
+      "mapUrl": {
         "type": "String"
       }
     }
@@ -357,5 +368,18 @@
       }
     }
   },
-  "enable_at_least_one_trigger_first": "فعّل وسيلة واحدة على الأقل أولًا"
+  "enable_at_least_one_trigger_first": "فعّل وسيلة واحدة على الأقل أولًا",
+  "online": "متصل",
+  "no_messages": "لا توجد رسائل",
+  "start_chatting_now": "ابدأ المحادثة الآن",
+  "type_message": "اكتب...",
+  "you_are_protected": "أنت محمي",
+  "here_for_your_safety": "نحن هنا من أجل سلامتك",
+  "add_contact": "إضافة جهة اتصال",
+  "live_location": "الموقع المباشر",
+  "sharing_your_location": "جارٍ مشاركة موقعك",
+  "live": "مباشر",
+  "please_login_before_report": "يرجى تسجيل الدخول قبل إرسال البلاغ.",
+  "please_add_incident_details": "يرجى إضافة نوع الحادث أو الوصف أو وسائط.",
+  "media_upload_failed": "فشل رفع الوسائط. تحقق من إعدادات وسياسات التخزين."
 }

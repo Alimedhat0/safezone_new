@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {
                                 switch (index) {
                                   case 0:
-                                    provider.shareLocation();
+                                    provider.shareLocation(l10n: l10n);
                                     break;
                                   case 1:
                                     provider.startLiveTracking();
@@ -246,6 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () async {
                           await grid.init();
                           await grid.startLiveTracking();
+                          await grid.startSosLocationSharing(l10n: l10n);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -261,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               lon: grid.currentLatLng!.longitude,
                             );
                           } else {
-                            print("Missing data ❌");
+                            print("Missing data");
                           }
                         },
                         child: Text(

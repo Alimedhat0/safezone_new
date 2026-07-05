@@ -11,14 +11,6 @@ class LocationProvider extends ChangeNotifier {
   LatLng? currentLocation;
   String selectedMapStyle = 'basic-v2-dark';
 
-  final Map<String, String> mapStyles = {
-    'streets': 'خريطة شوارع',
-    'hybrid': 'هجينة',
-    'satellite': 'قمر صناعي',
-    'streets-ar': 'شوارع عربية',
-    'topo': 'تضاريس',
-  };
-
   Future<void> getCurrentLocation() async {
     final hasPermission = await LocationPermissionService.ensurePermission();
     if (!hasPermission) return;

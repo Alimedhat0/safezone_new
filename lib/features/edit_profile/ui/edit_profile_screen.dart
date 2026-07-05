@@ -38,8 +38,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Consumer<EditProfileProvider>(
             builder: (context, pro, _) {
               return GestureDetector(
-                onTap: () {
+                onTap: () async {
                   pro.pickImage();
+                  await pro.saveImage(pro.imagePath!);
                 },
                 child: CircleAvatar(
                   radius: 50,

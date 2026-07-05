@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:safe_zone/features/notification/models/notification_model.dart';
+import 'package:safe_zone/l10n/generated/app_localizations.dart';
 
 class NotificationProvider extends ChangeNotifier {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -105,6 +106,7 @@ class NotificationProvider extends ChangeNotifier {
     required String senderUid,
     required double lat,
     required double lon,
+    AppLocalizations? l10n,
   }) async {
     final trustedResult =
         await _firestore
@@ -116,7 +118,7 @@ class NotificationProvider extends ChangeNotifier {
     if (trustedResult.docs.isEmpty) return;
 
     final senderDoc = await _firestore.collection('users').doc(senderUid).get();
-    final senderName = senderDoc.data()?['name'] ?? 'Someone';
+    final senderName = senderDoc.data()?['name'] ?? l10n?.someone ?? 'Someone';
     final mapUrl = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
 
     final batch = _firestore.batch();
@@ -132,8 +134,10 @@ class NotificationProvider extends ChangeNotifier {
 
       final notif = NotificationModel(
         id: notificationRef.id,
-        title: 'SOS Alert',
-        body: '$senderName needs help. Location: $mapUrl',
+        title: l10n?.sos_alert_notification_title ?? 'SOS Alert',
+        body:
+            l10n?.needs_help_location(senderName, mapUrl) ??
+            '$senderName needs help. Location: $mapUrl',
         date: now,
       );
 
@@ -173,11 +177,11 @@ class NotificationProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> scheduleNotification() async {
+  Future<void> scheduleNotification({AppLocalizations? l10n}) async {
     await notificationsPlugin.periodicallyShow(
       0,
-      'Are you safe?',
-      'هل انت بخير؟ هل تحتاج مساعدة؟',
+      l10n?.are_you_safe ?? 'Are you safe?',
+      l10n?.scheduled_safety_check ?? 'Are you okay? Do you need help?',
       RepeatInterval.hourly,
       const NotificationDetails(
         android: AndroidNotificationDetails('channel_id', 'channel_name'),
