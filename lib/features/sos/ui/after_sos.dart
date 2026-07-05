@@ -68,32 +68,35 @@ class _AfterSosState extends State<AfterSos> {
                       return Card(
                         margin: EdgeInsets.all(8),
                         elevation: 6,
-                        child: Row(
-                          spacing: 10,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.circle, color: Colors.green, size: 10),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 5.0,
-                              ),
-                              child: Column(
-                                spacing: 10,
-                                children: [
-                                  Text(
-                                    afterSos[index].title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            spacing: 10,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.circle, color: Colors.green, size: 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 5.0,
+                                ),
+                                child: Column(
+                                  spacing: 10,
+                                  children: [
+                                    Text(
+                                      afterSos[index].title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    afterSos[index].subtitle,
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
+                                    Text(
+                                      afterSos[index].subtitle,
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -101,9 +104,7 @@ class _AfterSosState extends State<AfterSos> {
                   );
                 },
               ),
-              Text(
-                l10n.sos_active_message,
-              ),
+              Text(l10n.sos_active_message),
             ],
           ),
         ),
