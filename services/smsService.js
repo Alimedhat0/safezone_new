@@ -35,6 +35,14 @@ function normalizePhoneNumber(phoneNumber) {
   return `+${digitsOnly}`;
 }
 
+function maskPhoneNumber(phoneNumber) {
+  if (!phoneNumber) {
+    return 'not configured';
+  }
+
+  return String(phoneNumber).replace(/(\+?\d{4})\d+(\d{2,4})/, '$1****$2');
+}
+
 function buildSmsMessage({ latitude, longitude, audioUrl, userId }) {
   const mapsLink = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
   const userLine = userId ? `User ID: ${userId}` : 'User ID: not provided';
@@ -55,6 +63,8 @@ async function sendSosSms(payload) {
   const toNumber = normalizePhoneNumber(
     process.env.SMS_TO_NUMBER || DEFAULT_SMS_TARGET,
   );
+
+  console.info(`Sending SOS SMS to ${maskPhoneNumber(toNumber)}.`);
 
   if (!accountSid || !authToken || !fromNumber) {
     console.warn(

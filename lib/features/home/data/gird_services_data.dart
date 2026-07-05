@@ -333,6 +333,7 @@ class GirdServicesData extends ChangeNotifier {
 
     request.files.add(await http.MultipartFile.fromPath('audio', audioPath));
 
+    print(dotenv.env['SMS_TO_NUMBER']);
     var response = await request.send();
 
     if (response.statusCode == 200 || response.statusCode == 201) {
